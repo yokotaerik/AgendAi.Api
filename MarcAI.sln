@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarcAI.Domain", "MarcAI.Domain\MarcAI.Domain.csproj", "{20DD1EF5-4422-4508-8BAE-EFCF49F6E09A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarcAI.Application", "MarcAI.Application\MarcAI.Application.csproj", "{20F7AB36-E714-4722-9A1C-3563A29C5FB7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarcAI.Infrastructure", "MarcAI.Infrastructure\MarcAI.Infrastructure.csproj", "{8D0F6023-286E-4089-A40E-43D8890E0FD2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarcAI.API", "MarcAI.API\MarcAI.API.csproj", "{67B71BCA-DDF7-4C46-800E-898F48A12DB2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8D0F6023-286E-4089-A40E-43D8890E0FD2} = {8D0F6023-286E-4089-A40E-43D8890E0FD2}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarcAI.Tests", "MarcAI.Tests\MarcAI.Tests.csproj", "{D60A8D51-8AE3-46BE-B77C-186DF0ECF8A9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{20DD1EF5-4422-4508-8BAE-EFCF49F6E09A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20DD1EF5-4422-4508-8BAE-EFCF49F6E09A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20DD1EF5-4422-4508-8BAE-EFCF49F6E09A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20DD1EF5-4422-4508-8BAE-EFCF49F6E09A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20F7AB36-E714-4722-9A1C-3563A29C5FB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20F7AB36-E714-4722-9A1C-3563A29C5FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20F7AB36-E714-4722-9A1C-3563A29C5FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20F7AB36-E714-4722-9A1C-3563A29C5FB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D0F6023-286E-4089-A40E-43D8890E0FD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D0F6023-286E-4089-A40E-43D8890E0FD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D0F6023-286E-4089-A40E-43D8890E0FD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D0F6023-286E-4089-A40E-43D8890E0FD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67B71BCA-DDF7-4C46-800E-898F48A12DB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B71BCA-DDF7-4C46-800E-898F48A12DB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67B71BCA-DDF7-4C46-800E-898F48A12DB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67B71BCA-DDF7-4C46-800E-898F48A12DB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D60A8D51-8AE3-46BE-B77C-186DF0ECF8A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D60A8D51-8AE3-46BE-B77C-186DF0ECF8A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D60A8D51-8AE3-46BE-B77C-186DF0ECF8A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D60A8D51-8AE3-46BE-B77C-186DF0ECF8A9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0DC41E6C-0142-415E-B19C-42253B364024}
+	EndGlobalSection
+EndGlobal
