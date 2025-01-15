@@ -12,6 +12,7 @@ public class Employee : BaseEntity
     public Company Company {  get; private set; }
     public bool Owner { get; private set; }
     public IList<Schedule> Schedules { get; private set; } = new List<Schedule>();
+    public IList<Service> OfferedServices { get; private set; } = new List<Service>();
     private Employee(string name, string surname, Cpf cpf, Guid userId, Company company, bool owner)
     {
         Name = name;

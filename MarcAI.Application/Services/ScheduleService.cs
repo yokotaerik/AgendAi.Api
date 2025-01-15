@@ -16,7 +16,7 @@ internal class ScheduleService : IScheduleService
         _employeeRepository = employeeRepository;
     }
 
-    public async Task AddScheduleAsync(RegisterSchedulesDto data)
+    public async Task AddSchedule(RegisterSchedulesDto data)
     {
         var employee = await _employeeRepository.GetByIdAsync(data.EmployeeId)
            ?? throw new ArgumentException("Employee not found");
@@ -35,7 +35,7 @@ internal class ScheduleService : IScheduleService
         await _employeeRepository.UpdateAsync(employee);
     }
 
-    public async Task CreateDefaultScheduleAsync(RegisterDefaultSchedulesDto data)
+    public async Task CreateDefaultSchedule(RegisterDefaultSchedulesDto data)
     {
         var employee = await _employeeRepository.GetByIdAsync(data.EmployeeId) 
             ?? throw new ArgumentException("Employee not found");
@@ -49,7 +49,7 @@ internal class ScheduleService : IScheduleService
         await _employeeRepository.UpdateAsync(employee);
     }
 
-    public Task<bool> EditScheduleAsync(UpdateScheduleDto data)
+    public Task<bool> EditSchedule(UpdateScheduleDto data)
     {
         throw new NotImplementedException();
     }

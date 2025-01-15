@@ -1,6 +1,6 @@
 ﻿namespace MarcAI.Domain.Models.ValueObjects;
 
-public class Cpf
+public record Cpf
 {
     public string Value { get; }
 

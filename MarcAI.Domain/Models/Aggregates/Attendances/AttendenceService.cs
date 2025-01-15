@@ -8,4 +8,21 @@ public class AttendenceService
     public Guid ServiceId { get; private set; }
     public Service Service { get; private set; } = null!;
     public decimal Value { get; private set; }
+
+    private AttendenceService(Guid attendenceId, Guid serviceId, decimal value)
+    {
+        AttendenceId = attendenceId;
+        ServiceId = serviceId;
+        Value = value;
+    }
+
+    public static AttendenceService Create(Guid attendenceId, Guid serviceId, decimal value)
+    {
+        return new AttendenceService(attendenceId, serviceId, value);
+    }
+
+    public static List<AttendenceService> Create(Guid attendenceId, IEnumerable<Service> services)
+    {
+        return services.Select(service => new AttendenceService(attendenceId, service.Id, service.Price)).ToList();
+    }
 }

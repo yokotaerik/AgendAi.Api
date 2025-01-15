@@ -1,4 +1,4 @@
-﻿using MarcAI.Application.Dtos.Schedules.AvaiblePeriods
+﻿using MarcAI.Application.Dtos.Schedules.AvaiblePeriods;
 
 namespace MarcAI.Application.Dtos.Schedules;
 public record RegisterDefaultSchedulesDto

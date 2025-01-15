@@ -5,7 +5,7 @@ namespace MarcAI.Application.Interfaces;
 
 public interface IScheduleService
 {
-    Task CreateDefaultScheduleAsync(RegisterDefaultSchedulesDto data);
-    Task AddScheduleAsync(RegisterScheduleDto data);
-    Task<bool> EditScheduleAsync(UpdateScheduleDto data);
+    Task CreateDefaultSchedule(RegisterDefaultSchedulesDto data);
+    Task AddSchedule(RegisterSchedulesDto data);
+    Task<bool> EditSchedule(UpdateScheduleDto data);
 }

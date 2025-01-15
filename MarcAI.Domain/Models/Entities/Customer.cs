@@ -18,9 +18,9 @@ public class Customer : BaseEntity
         UserId = userId;
     }
 
-    public static Customer Create(string name, string surname, Cpf cpf, Guid userId)
+    public static Customer Create(string name, string surname, string cpf, Guid userId)
     {
-        return new Customer(name, surname, cpf, userId);
+        return new Customer(name, surname, Cpf.Create(cpf), userId);
     }
 
 }

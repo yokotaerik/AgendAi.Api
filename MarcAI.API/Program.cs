@@ -1,4 +1,6 @@
 using FluentValidation.AspNetCore;
+using MarcAI.Application.Configuration;
+using MarcAI.Infrastructure.Configuration;
 using MarcAI.Infrastructure.Data.Context;
 using MarcAI.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,9 +25,23 @@ builder.Services.AddFluentValidationAutoValidation(fv =>
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
+// Dependency injection 
+
+// Application
+builder.Services.AddApplicationServices();
+
+// Infra
+builder.Services.AddRepositories();
+
+
 builder.Services
         .AddIdentityApiEndpoints<ApplicationUser>()
         .AddEntityFrameworkStores<AppDbContext>();
+
+builder.Services.AddAutoMapper(typeof(StartupBase));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -37,6 +53,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapControllers();
 
 app.UseHttpsRedirection();
 
