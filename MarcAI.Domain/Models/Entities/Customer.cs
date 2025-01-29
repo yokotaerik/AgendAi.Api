@@ -10,6 +10,13 @@ public class Customer : BaseEntity
     public Cpf Cpf { get; private set; }
     public Guid UserId { get; private set; }
 
+    //Ef Relational
+    public User User { get; private set; } = null!;
+
+#pragma warning disable CS8618
+    private Customer() { } // Supressão do aviso de inicialização
+#pragma warning restore CS8618
+
     private Customer(string name, string surname, Cpf cpf, Guid userId)
     {
         Name = name;

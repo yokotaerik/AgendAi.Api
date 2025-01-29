@@ -13,6 +13,12 @@ public class Employee : BaseEntity
     public bool Owner { get; private set; }
     public IList<Schedule> Schedules { get; private set; } = new List<Schedule>();
     public IList<Service> OfferedServices { get; private set; } = new List<Service>();
+
+
+#pragma warning disable CS8618
+    private Employee() { } // Supressão do aviso de inicialização
+#pragma warning restore CS8618
+
     private Employee(string name, string surname, Cpf cpf, Guid userId, Company company, bool owner)
     {
         Name = name;

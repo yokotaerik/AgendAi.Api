@@ -11,6 +11,11 @@ namespace MarcAI.Domain.Models.ValueObjects
             Value = value;
         }
 
+
+#pragma warning disable CS8618
+        private Cnpj() { } // Supressão do aviso de inicialização
+#pragma warning restore CS8618
+
         public static Cnpj Create(string cnpj)
         {
             if (string.IsNullOrWhiteSpace(cnpj))
@@ -26,34 +31,31 @@ namespace MarcAI.Domain.Models.ValueObjects
 
         private static bool IsCnpjValid(string cnpj)
         {
-            // Regular expression to validate the CNPJ format
-            var regex = new Regex(@"^\d{14}$");
-            if (!regex.IsMatch(cnpj))
+            if (!Regex.IsMatch(cnpj, @"^\d{14}$"))
                 return false;
 
-            // CNPJ validation calculations
-            var numbers = cnpj.Substring(0, 12);
-            var digits = cnpj.Substring(12, 2);
+            int[] weights1 = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] weights2 = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
 
-            var digit1 = CalculateDigit(numbers, 5, 6);
-            var digit2 = CalculateDigit(numbers + digit1, 6, 7);
+            string numbers = cnpj.Substring(0, 12);
+            string digits = cnpj.Substring(12, 2);
 
-            return digits == digit1 + digit2;
+            char digit1 = CalculateDigit(numbers, weights1);
+            char digit2 = CalculateDigit(numbers + digit1, weights2);
+
+            return digits == $"{digit1}{digit2}";
         }
 
-        private static string CalculateDigit(string numbers, int weight1, int weight2)
+        private static char CalculateDigit(string numbers, int[] weights)
         {
             int sum = 0;
             for (int i = 0; i < numbers.Length; i++)
             {
-                sum += (numbers[i] - '0') * (weight1 > 1 ? weight1-- : weight2--);
+                sum += (numbers[i] - '0') * weights[i];
             }
 
-            int modulo = sum % 11;
-            if (modulo < 2)
-                return "0";
-
-            return (11 - modulo).ToString();
+            int remainder = sum % 11;
+            return remainder < 2 ? '0' : (char)('0' + (11 - remainder));
         }
 
         public override string ToString()

@@ -1,8 +1,14 @@
 ﻿namespace MarcAI.Domain.Models.ValueObjects;
 
-public record Cpf
+public class Cpf 
 {
     public string Value { get; }
+
+
+
+#pragma warning disable CS8618
+    private Cpf() { } // Supressão do aviso de inicialização
+#pragma warning restore CS8618
 
     private Cpf(string value)
     {

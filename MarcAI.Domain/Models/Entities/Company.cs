@@ -9,7 +9,11 @@ public class Company : BaseEntity
     public string FantasyName { get; private set; }
     public Address Address { get; private set; }
     public Cnpj Cnpj { get; private set; }
-    public ICollection<Employee> Employees { get; private set; } = new List<Employee>();
+    public  ICollection<Employee> Employees { get; private set; } = new List<Employee>();
+
+    #pragma warning disable CS8618
+    private Company() { } // Supressão do aviso de inicialização
+    #pragma warning restore CS8618
 
     private Company(string corporateName, string fantasyName, Address address, Cnpj cnpj)
     {

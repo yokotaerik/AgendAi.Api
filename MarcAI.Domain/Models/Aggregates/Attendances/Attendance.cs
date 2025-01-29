@@ -17,6 +17,13 @@ public class Attendance : BaseEntity
 
     public IList<AttendenceService> Services { get; private set; } = new List<AttendenceService>();
 
+
+#pragma warning disable CS8618
+    private Attendance() { } // Supressão do aviso de inicialização
+#pragma warning restore CS8618
+
+
+
     private Attendance(DateTime start,
                        Guid employeeId,
                        Guid costumerId,

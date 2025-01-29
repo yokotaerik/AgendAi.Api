@@ -9,6 +9,10 @@ public class AttendenceService
     public Service Service { get; private set; } = null!;
     public decimal Value { get; private set; }
 
+#pragma warning disable CS8618
+    private AttendenceService() { } // Supressão do aviso de inicialização
+#pragma warning restore CS8618
+
     private AttendenceService(Guid attendenceId, Guid serviceId, decimal value)
     {
         AttendenceId = attendenceId;

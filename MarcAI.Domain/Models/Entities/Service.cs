@@ -10,6 +10,11 @@ public class Service : BaseEntity
     public TimeSpan Duration { get; private set; }
     public Guid CompanyId { get; private set; }
 
+
+    #pragma warning disable CS8618
+        private Service() { } // Supressão do aviso de inicialização
+    #pragma warning restore CS8618
+
     public static Service Create(string name, string? description, TimeSpan duration, decimal amount, Guid companyId)
     {
         return new Service(name, description,duration, amount, companyId);

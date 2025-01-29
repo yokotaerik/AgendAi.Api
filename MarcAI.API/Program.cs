@@ -1,5 +1,6 @@
 using FluentValidation.AspNetCore;
 using MarcAI.Application.Configuration;
+using MarcAI.Application.Mapping;
 using MarcAI.Infrastructure.Configuration;
 using MarcAI.Infrastructure.Data.Context;
 using MarcAI.Infrastructure.Identity;
@@ -20,6 +21,7 @@ builder.Services.AddFluentValidationAutoValidation(fv =>
     fv.DisableDataAnnotationsValidation = true;
 });
 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Primeiro o autenticao e apenas depois a autorizacao
 builder.Services.AddAuthentication();

@@ -8,6 +8,11 @@ public class User : BaseEntity
     public string Email { get; set; } = string.Empty;
     public string HashedPassword { get; set; } = string.Empty;
 
+#pragma warning disable CS8618
+        private User() { } // Supressão do aviso de inicialização
+#pragma warning restore CS8618
+
+
     public User(Guid id, string email, string hashedPassword)
     {
         Id = id;

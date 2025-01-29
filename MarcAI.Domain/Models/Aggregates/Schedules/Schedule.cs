@@ -8,6 +8,11 @@ public class Schedule : BaseEntity
     public Guid EmployeeId { get; set; }
     public IList<AvailablePeriod> Periods { get; private set; } = new List<AvailablePeriod>();
 
+
+#pragma warning disable CS8618
+    private Schedule() { } // Supressão do aviso de inicialização
+#pragma warning restore CS8618
+
     public static Schedule Create(DateOnly date, IList<AvailablePeriod> periods, Guid employeeId)
     {
         return new Schedule

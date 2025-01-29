@@ -9,12 +9,14 @@ namespace MarcAI.Application.Services;
 internal class CostumerService : ICustomerService
 {
     private readonly ICostumerRepository _costumerRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public CostumerService(ICostumerRepository costumerRepository, IMapper mapper)
+    public CostumerService(ICostumerRepository costumerRepository, IMapper mapper, IUserRepository userRepository)
     {
         _costumerRepository = costumerRepository;
         _mapper = mapper;
+        _userRepository = userRepository;
     }
 
     public Task<CostumerDto> GetById(Guid id)
@@ -31,10 +33,14 @@ internal class CostumerService : ICustomerService
     {
         var newUserToCostumer = User.Create(data.Credentials.Email, data.Credentials.Password);
 
+        await _userRepository.Create(newUserToCostumer);
+
         var newCostumer = Customer.Create(data.Name!, data.Surname!, data.Cpf!, newUserToCostumer.Id);
 
         await _costumerRepository.Add(newCostumer);
-    
+
+        if (!await _costumerRepository.Commit()) throw new Exception("Persistence error");
+
         return _mapper.Map<CostumerDto>(newCostumer);
     }
 

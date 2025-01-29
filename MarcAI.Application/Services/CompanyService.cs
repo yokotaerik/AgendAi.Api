@@ -1,4 +1,5 @@
-﻿using MarcAI.Application.Dtos.Companies;
+﻿using AutoMapper;
+using MarcAI.Application.Dtos.Companies;
 using MarcAI.Application.Interfaces;
 using MarcAI.Domain.Interfaces.Repositories;
 using MarcAI.Domain.Models.Entities;
@@ -9,26 +10,28 @@ namespace MarcAI.Application.Services;
 internal class CompanyService : ICompanyService
 {
     private readonly ICompanyRepository _companyRepository;
+    private readonly IMapper _mapper;
 
-    public CompanyService(ICompanyRepository companyRepository)
+    public CompanyService(ICompanyRepository companyRepository, IMapper mapper)
     {
         _companyRepository = companyRepository;
+        _mapper = mapper;
     }
 
-    public Task<IEnumerable<Company>> GetAll()
+    public Task<IEnumerable<CompanyDto>> GetAll()
     {
         throw new NotImplementedException();
     }
 
-    public async Task<Company?> GetById(Guid id)
-        => await _companyRepository.GetById(id);
+    public async Task<CompanyDto?> GetById(Guid id)
+        => throw new NotImplementedException();
 
-    public async Task<Company> Create(RegisterCompanyDto data)
+    public async Task<CompanyDto> Create(RegisterCompanyDto data)
     {
         if(await _companyRepository.ExistsAsync(c => c.CorporateName == data.CorporateName))
             throw new ArgumentException("Corporate name already exists.");
 
-        var validCnpj = Cnpj.Create(data.Cnpj!.Value);
+        var validCnpj = Cnpj.Create(data.Cnpj!);
 
         var validAddress = Address.Create(data.Address!.Street,
                                     data.Address!.Number,
@@ -40,16 +43,25 @@ internal class CompanyService : ICompanyService
 
         var newComapany = Company.Create(data.CorporateName!, data.FantasyName!, validAddress, validCnpj);
 
-        return await _companyRepository.Create(newComapany);
+        await _companyRepository.Create(newComapany);
+
+        if(!await _companyRepository.Commit()) throw new InvalidOperationException("Failed to persist");
+
+        return _mapper.Map<CompanyDto>(newComapany);
     }
-    public async Task<Company> Update(UpdateCompanyDto data)
+
+    public async Task<CompanyDto> Update(UpdateCompanyDto data)
     {
         var company = await _companyRepository.GetByIdToUpdate(data.Id!.Value) 
             ?? throw new ArgumentException("Company not found.");
 
         company.Update(data.FantasyName, data.Address);
 
-        return await _companyRepository.Update(company);
+         _companyRepository.Update(company);
+
+        if (!await _companyRepository.Commit()) throw new InvalidOperationException("Failed to persist");
+
+        return _mapper.Map<CompanyDto>(company);
     }
 
     public async Task<bool> Delete(Guid id)
@@ -59,9 +71,10 @@ internal class CompanyService : ICompanyService
 
         company.Delete();
 
-        await _companyRepository.Update(company);
+        _companyRepository.Update(company);
+
+        if (!await _companyRepository.Commit()) throw new InvalidOperationException("Failed to persist");
 
         return true;
     }
-
 }

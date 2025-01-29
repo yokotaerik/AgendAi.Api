@@ -2,11 +2,10 @@
 
 namespace MarcAI.Domain.Interfaces.Repositories;
 
-public interface IServiceRepository
+public interface IServiceRepository : IUnitOfWork
 {
-    Task<Service> Create(Service service);
-    Task<bool> Delete(Guid id);
-    Task<Service> GetById(Guid id);
+    Task<Service?> GetById(Guid id);
     Task<IEnumerable<Service>> GetListByIds(IList<Guid> ids);
-    Task<Service> Update(Service service);
+    Task Create(Service service);
+    void Update(Service service);
 }
