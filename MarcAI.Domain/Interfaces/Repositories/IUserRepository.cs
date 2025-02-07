@@ -5,5 +5,5 @@ namespace MarcAI.Domain.Interfaces.Repositories;
 public interface IUserRepository
 {
     Task<User?> GetById(Guid id);
-    Task<User> Create(User user);
+    Task<User> Create(User user, string password);
 }

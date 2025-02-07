@@ -19,13 +19,15 @@ internal class UserRepository : UnitOfWork, IUserRepository
         _userManager = userManager;
     }
 
-    public async Task<User> Create(User user)
+    public async Task<User> Create(User user, string password)
     {
         var identityUser = ApplicationUser.CreateFromUser(user);
 
-        if (!_userManager.CreateAsync(identityUser).Result.Succeeded)
+        var sucess = await _userManager.CreateAsync(identityUser, password);
+
+        if (!sucess.Succeeded)
         {
-            var errors = string.Join(", ", _userManager.CreateAsync(identityUser).Result.Errors.Select(e => e.Description));
+            var errors = string.Join(", ", sucess.Errors.Select(e => e.Description));
             throw new Exception($"User creation failed: {errors}");
         }
 

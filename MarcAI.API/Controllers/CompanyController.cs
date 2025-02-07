@@ -10,10 +10,50 @@ namespace MarcAI.API.Controllers
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _companyService;
-        
+
         public CompanyController(ICompanyService companyService)
         {
             _companyService = companyService;
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Summary = "Obtém uma lista de empresas")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Retorna as empresas baseada no filtro", typeof(CompanyDto))]
+        public async Task<IActionResult> GetList()
+        {
+            try
+            {
+                var companies = await _companyService.GetList();
+                return Ok(companies);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Obtém uma  empresa")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Retorna a empresa", typeof(CompleteCompanyDto))]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            try
+            {
+                var company = await _companyService.GetById(id);
+                return Ok(company);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost]

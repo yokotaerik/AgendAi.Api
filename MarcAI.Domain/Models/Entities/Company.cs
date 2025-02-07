@@ -10,8 +10,9 @@ public class Company : BaseEntity
     public Address Address { get; private set; }
     public Cnpj Cnpj { get; private set; }
     public  ICollection<Employee> Employees { get; private set; } = new List<Employee>();
+    public ICollection<Service> Services { get; private set; } = new List<Service>();
 
-    #pragma warning disable CS8618
+#pragma warning disable CS8618
     private Company() { } // Supressão do aviso de inicialização
     #pragma warning restore CS8618
 

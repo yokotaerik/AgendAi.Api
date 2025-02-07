@@ -18,13 +18,10 @@ internal class CompanyService : ICompanyService
         _mapper = mapper;
     }
 
-    public Task<IEnumerable<CompanyDto>> GetAll()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IEnumerable<CompanyDto>> GetList() => _mapper.Map<IEnumerable<CompanyDto>>(await _companyRepository.GetList());
 
-    public async Task<CompanyDto?> GetById(Guid id)
-        => throw new NotImplementedException();
+    public async Task<CompleteCompanyDto?> GetById(Guid id)
+        => _mapper.Map<CompleteCompanyDto>(await _companyRepository.GetById(id));
 
     public async Task<CompanyDto> Create(RegisterCompanyDto data)
     {

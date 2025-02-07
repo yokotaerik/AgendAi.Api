@@ -1,4 +1,5 @@
 ﻿using MarcAI.Application.Dtos.Attendances;
+using MarcAI.Application.Dtos.Filters;
 using MarcAI.Application.Interfaces;
 using MarcAI.Domain.Interfaces.Repositories;
 using MarcAI.Domain.Models.Aggregates.Attendances;
@@ -48,5 +49,10 @@ internal class AttendanceService : IAttendanceService
         newAttendance.AddServices(services);
 
         return await _attendanceRepository.AddAsync(newAttendance);
+    }
+
+    public Task<IEnumerable<AttendanceDto>> GetList(AttendanceFilterDto filter)
+    {
+        throw new NotImplementedException();
     }
 }

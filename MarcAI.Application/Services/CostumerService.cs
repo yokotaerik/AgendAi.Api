@@ -31,9 +31,9 @@ internal class CostumerService : ICustomerService
 
     public async Task<CostumerDto> Create(RegisterCostumerDto data)
     {
-        var newUserToCostumer = User.Create(data.Credentials.Email, data.Credentials.Password);
+        var newUserToCostumer = User.Create(data.Credentials.Email);
 
-        await _userRepository.Create(newUserToCostumer);
+        await _userRepository.Create(newUserToCostumer, data.Credentials.Password);
 
         var newCostumer = Customer.Create(data.Name!, data.Surname!, data.Cpf!, newUserToCostumer.Id);
 

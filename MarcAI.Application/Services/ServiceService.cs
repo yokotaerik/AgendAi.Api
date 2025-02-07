@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using MarcAI.Application.Dtos.Filters;
 using MarcAI.Application.Dtos.Services;
 using MarcAI.Application.Interfaces;
 using MarcAI.Domain.Interfaces.Repositories;
 using MarcAI.Domain.Models.Entities;
+using MarcAI.Domain.Models.ValueObjects;
+using MarcAI.Shared.Helpers;
 
 namespace MarcAI.Application.Services;
 
@@ -35,9 +38,20 @@ internal class ServiceService(IServiceRepository serviceRepository, IMapper mapp
         return true;
     }
 
-    public Task<IEnumerable<ServiceDto>> GetAll()
+    public async Task<PagedResult<ServiceDto>> GetList(ServiceFilterDto filter)
     {
-        throw new NotImplementedException();
+        var predicate = PredicateBuilder.True<Service>();
+
+        if (!string.IsNullOrEmpty(filter.Keyword))
+        {
+            predicate = predicate.And(x => x.Name.Contains(filter.Keyword));
+        }
+
+        var services = await _serviceRepository.GetList(predicate, filter.Page, filter.PageSize);
+
+        var dtos = _mapper.Map<IEnumerable<ServiceDto>>(services);
+
+        return new PagedResult<ServiceDto>(dtos, 0, filter.Page, filter.PageSize);
     }
 
     public Task<ServiceDto> GetById(Guid id) => _serviceRepository.GetById(id).ContinueWith(task => _mapper.Map<ServiceDto>(task.Result));
@@ -53,4 +67,6 @@ internal class ServiceService(IServiceRepository serviceRepository, IMapper mapp
 
         return _mapper.Map<ServiceDto>(service);
     }
+
+  
 }

@@ -1,4 +1,5 @@
-﻿using MarcAI.Application.Dtos.Services;
+﻿using MarcAI.Application.Dtos.Filters;
+using MarcAI.Application.Dtos.Services;
 using MarcAI.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +18,11 @@ namespace MarcAI.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetList(ServiceFilterDto filter)
         {
             try
             {
-                var services = await _serviceService.GetAll();
+                var services = await _serviceService.GetList(filter);
                 return Ok(services);
             }
             catch (Exception ex)

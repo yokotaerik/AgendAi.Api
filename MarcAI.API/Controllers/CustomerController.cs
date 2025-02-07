@@ -4,6 +4,7 @@ using MarcAI.Domain.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MarcAI.API.Controllers;
 
@@ -15,6 +16,26 @@ public class CustomerController : Controller
     {
         _customerService = customerService;
     }
+
+    [HttpGet("{id}")]
+    [SwaggerOperation(Summary = "Obtém os dados do usuário")]
+    public async Task<IActionResult> Get(Guid id)
+    {
+        try
+        {
+            var customer = await _customerService.GetById(id);
+            return Ok(customer);
+        }
+        catch (ArgumentNullException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
 
     [HttpPost]
     [SwaggerOperation(Summary = "Cria um novo cliente", Description = "Cria um novo cliente com os dados fornecidos.")]

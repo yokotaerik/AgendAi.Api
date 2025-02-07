@@ -13,11 +13,18 @@ internal class ServiceRepository(AppDbContext context) : UnitOfWork(context), IS
 
     public async Task Create(Service Service) => await _dbSet.AddAsync(Service);
 
-    public async Task<bool> ExistsAsync(Expression<Func<Service, bool>> predicate) => await _dbSet.AnyAsync(predicate);
 
     public async Task<Service?> GetById(Guid id) => await _dbSet.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
     public async Task<Service?> GetByIdToUpdate(Guid id) => await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+
+    public async Task<IEnumerable<Service>> GetList(Expression<Func<Service, bool>> predicate, int pageNumber, int pageSize)
+    {
+        return (IEnumerable<Service>)_dbSet.Where(predicate)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
 
     public async Task<IEnumerable<Service>> GetListByIds(IList<Guid> ids)
          => await _dbSet.Where(s => ids.Contains(s.Id)).ToListAsync();

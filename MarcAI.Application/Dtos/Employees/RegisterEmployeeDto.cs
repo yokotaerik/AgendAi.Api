@@ -1,6 +1,4 @@
-﻿using MarcAI.Domain.Models.Aggregates.Schedules;
-using MarcAI.Domain.Models.Entities;
-using MarcAI.Domain.Models.ValueObjects;
+﻿using MarcAI.Domain.Models.ValueObjects;
 
 namespace MarcAI.Application.Dtos.Employees;
 

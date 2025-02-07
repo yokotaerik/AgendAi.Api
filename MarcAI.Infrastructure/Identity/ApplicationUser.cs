@@ -1,5 +1,4 @@
-﻿
-using MarcAI.Domain.Models.Entities;
+﻿using MarcAI.Domain.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace MarcAI.Infrastructure.Identity;
@@ -10,8 +9,7 @@ public class ApplicationUser : IdentityUser<Guid>
         return new User
         (
             Id,
-            Email!,
-            string.Empty
+            Email!
         );
     }
 
@@ -21,6 +19,6 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public static ApplicationUser CreateFromUser(User user)
     {
-        return new ApplicationUser { Id = user.Id, Email = user.Email , UserName = user.Email, PasswordHash = user.HashedPassword};
+        return new ApplicationUser { Id = user.Id, Email = user.Email , UserName = user.Email};
     } 
 }
