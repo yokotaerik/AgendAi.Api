@@ -15,10 +15,13 @@ public class MappingProfile : Profile
         CreateMap<Customer, CostumerDto>().ReverseMap();
 
         // Comapany Dtos
-        CreateMap<Company, CompanyDto>().ReverseMap();
+        CreateMap<Company, CompanyDto>()
+            .ForMember(dto => dto.ImageUrl, opt => opt.MapFrom(src => src.Photos.FirstOrDefault()!.WebUrl ?? ""))
+            .ReverseMap();
         CreateMap<Company, CompleteCompanyDto>()
             .ForMember(dto => dto.Employees, opt => opt.MapFrom(src => src.Employees))
             .ForMember(dto => dto.Services, opt => opt.MapFrom(src => src.Services))
+            .ForMember(dto => dto.ImageUrls, opt => opt.MapFrom(src => src.Photos.Select(p => p.WebUrl)))
             .ReverseMap();
 
         //Services 

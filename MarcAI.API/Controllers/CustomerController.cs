@@ -1,10 +1,7 @@
 ﻿using MarcAI.Application.Dtos.Costumers;
 using MarcAI.Application.Interfaces;
-using MarcAI.Domain.Models.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MarcAI.API.Controllers;
 

@@ -14,6 +14,7 @@ public record CompleteCompanyDto
     public Cnpj? Cnpj { get; init; }
     public required IEnumerable<BasicInfoDto> Employees { get; init; }
     public required IEnumerable<ServiceDto> Services { get; init; }
+    public List<string> ImageUrls { get; init; } = [];
 }
 
 

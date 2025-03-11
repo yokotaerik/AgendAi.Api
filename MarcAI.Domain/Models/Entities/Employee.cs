@@ -6,6 +6,7 @@ namespace MarcAI.Domain.Models.Entities;
 public class Employee : BaseEntity
 {
     public Cpf Cpf { get; private set; }
+    public Guid? PhotoId { get; private set; }
     public Guid UserId { get; private set; }
     public Guid CompanyId { get; private set; }
     public bool Owner { get; private set; }
@@ -70,10 +71,14 @@ public class Employee : BaseEntity
             }
         }
     }
-
     public void RemovePastSchedules()
     {
         var today = DateOnly.FromDateTime(DateTime.Now);
         Schedules = Schedules.Where(schedule => schedule.Date >= today).ToList();
+    }
+
+    public void UpdatePhoto(Guid photoId)
+    {
+        PhotoId = photoId;
     }
 }

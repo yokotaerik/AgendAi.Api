@@ -24,6 +24,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<AttendenceService> attendancesServices { get; set; }
     public DbSet<AvailablePeriod> availablePeriods { get; set; }
     public DbSet<Schedule> schedules { get; set; }
+    public DbSet<Photo> photos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -65,7 +66,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             .OwnsOne(e => e.Cpf, cpf =>
             {
                 cpf.Property(c => c.Value).HasColumnName("Cpf");
-            });
+            })
+            .HasOne(e => e.Photo)
+            .WithOne()
+            .HasForeignKey<Photo>(e => e.EmployeeId);
 
         modelBuilder.Entity<Employee>()
         .HasOne(e => e.User)

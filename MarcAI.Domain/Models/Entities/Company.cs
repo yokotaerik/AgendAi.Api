@@ -12,6 +12,7 @@ public class Company : BaseEntity
     public  ICollection<Employee> Employees { get; private set; } = [];
     public ICollection<Service> Services { get; private set; } = [];
     public ICollection<Photo> Photos { get; private set; } = [];
+    public ICollection<ContactInfo> Contacts { get; private set; } = [];
 
 #pragma warning disable CS8618
     private Company() { } // Supressão do aviso de inicialização
@@ -53,14 +54,12 @@ public class Company : BaseEntity
         Employees.Add(employee);
     }
 
-    public void RemovePhoto(Photo photo)
-    {
-        Photos.Remove(photo);
-    }
+    public void RemovePhoto(Photo photo) => Photos.Remove(photo);
 
-    public void AddPhoto(Photo photo)
-    {
-        Photos.Add(photo);
-    }
+    public void AddPhoto(Photo photo) => Photos.Add(photo);
+
+    public void AddContact(ContactInfo contact) => Contacts.Add(contact);
+
+    public void RemoveContact(ContactInfo contact) => Contacts.Remove(contact);
 
 }

@@ -30,4 +30,21 @@ public class PhotosController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpGet("{photoId}")]
+    public async Task<IActionResult> GetPhoto(Guid photoId)
+    {
+        try
+        {
+            var photo = await _photoService.GetPhoto(photoId);
+            if (photo == null)
+                return NotFound();
+
+            return Ok(photo);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

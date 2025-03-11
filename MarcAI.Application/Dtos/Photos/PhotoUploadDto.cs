@@ -1,7 +1,7 @@
 using MarcAI.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 
-namespace MarcAI.Application.Dtos.Photos
+namespace MarcAI.Application.Dtos.Photos;
 
 public class PhotoUploadDto
 {

@@ -14,6 +14,7 @@ internal class ServiceService(IServiceRepository serviceRepository, IMapper mapp
     private readonly IServiceRepository _serviceRepository = serviceRepository;
     private readonly IMapper _mapper = mapper;
     private readonly IUserService _userService = userService;
+    private readonly IEmployeeRepository employeeRepository = employeeRepository;
 
     public async Task<ServiceDto> Create(RegisterServiceDto data)
     {

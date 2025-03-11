@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using MarcAI.Application.Dtos.Common.User;
 using MarcAI.Application.Dtos.Companies;
+using MarcAI.Application.Dtos.Services;
 using MarcAI.Application.Interfaces;
 using MarcAI.Domain.Interfaces.Repositories;
 using MarcAI.Domain.Models.Entities;
 using MarcAI.Domain.Models.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace MarcAI.Application.Services;
 
@@ -23,7 +26,26 @@ internal class CompanyService : ICompanyService
     public async Task<IEnumerable<CompanyDto>> GetList() => _mapper.Map<IEnumerable<CompanyDto>>(await _companyRepository.GetList());
 
     public async Task<CompleteCompanyDto?> GetById(Guid id)
-        => _mapper.Map<CompleteCompanyDto>(await _companyRepository.GetById(id));
+    {
+        var queryable = _companyRepository.GetCompanyQueryable();
+
+        var companyDto = await queryable
+          .Where(c => c.Id == id)
+          .Select(c => new CompleteCompanyDto
+          {
+              Id = c.Id,
+              CorporateName = c.CorporateName,
+              FantasyName = c.FantasyName,
+              Address = c.Address,
+              Cnpj = c.Cnpj,
+              ImageUrls = c.Photos.Select(p => p.WebUrl).ToList(),
+              Employees = c.Employees.Select(e => new BasicInfoDto(e.Id, e.Photo != null ? e.Photo.WebUrl : "", e.User.Name + " " + e.User.Surname)).ToList(),
+              Services = c.Services.Select(s => _mapper.Map<ServiceDto>(s)).ToList()
+          })
+          .FirstOrDefaultAsync();
+
+        return companyDto;
+    }
 
     public async Task<CompanyDto> Create(RegisterCompanyDto data)
     {
@@ -60,6 +82,8 @@ internal class CompanyService : ICompanyService
 
         company.Update(data.FantasyName, data.Address);
 
+        HandlePhoneData(company, data.Phones);
+
          _companyRepository.Update(company);
 
         if (!await _companyRepository.Commit()) throw new InvalidOperationException("Failed to persist");
@@ -80,4 +104,25 @@ internal class CompanyService : ICompanyService
 
         return true;
     }
+
+
+    #region METHODS ANDS FUNCTIONS
+    
+    private static void HandlePhoneData(Company company, List<string> phones)
+    {
+        var phonesToRemove = company.Contacts
+            .Where(c => !phones.Contains(c.Info))
+            .ToList();
+
+        foreach (var phone in phonesToRemove)
+            company.RemoveContact(phone);
+
+        var existingPhones = company.Contacts.Select(p => p.Info).ToList();
+        var newPhones = phones.Where(p => !existingPhones.Contains(p)).ToList();
+
+        foreach (var phone in newPhones)
+            company.AddContact(ContactInfo.CreatePhone(phone));
+    }
+
+    #endregion
 }

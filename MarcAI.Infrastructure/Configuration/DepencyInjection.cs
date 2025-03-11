@@ -15,6 +15,7 @@ public static class DepencyInjection
         services.AddScoped<IServiceRepository, ServiceRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IPhotoRepository, PhotoRepository>();
 
         return services;
     }

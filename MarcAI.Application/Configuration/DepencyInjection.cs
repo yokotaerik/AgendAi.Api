@@ -13,6 +13,7 @@ public static class DepencyInjection
         services.AddScoped<IServiceService, ServiceService>();
         services.AddScoped<IUserService, UserService>(); 
         services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IPhotoService, PhotoService>();
 
         return services;
     }

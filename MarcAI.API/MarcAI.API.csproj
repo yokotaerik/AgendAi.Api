@@ -27,4 +27,8 @@
     <ProjectReference Include="..\MarcAI.Infrastructure\MarcAI.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\photos\" />
+  </ItemGroup>
+
 </Project>

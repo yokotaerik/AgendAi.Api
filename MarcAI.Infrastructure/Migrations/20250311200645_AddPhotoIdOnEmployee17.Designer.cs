@@ -3,6 +3,7 @@ using System;
 using MarcAI.Infrastructure.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MarcAI.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250311200645_AddPhotoIdOnEmployee17")]
+    partial class AddPhotoIdOnEmployee17
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,7 +239,7 @@ namespace MarcAI.Infrastructure.Migrations
                     b.Property<bool>("Owner")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid?>("PhotoId")
+                    b.Property<Guid>("PhotoId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -261,7 +264,7 @@ namespace MarcAI.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CompanyId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -270,7 +273,7 @@ namespace MarcAI.Infrastructure.Migrations
                     b.Property<DateTime>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("EmployeeId")
+                    b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("EntityType")
@@ -279,14 +282,10 @@ namespace MarcAI.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("PathName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("WebUrl")
+                    b.Property<string>("Url")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -294,10 +293,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
-
-                    b.ToTable("photos");
+                    b.ToTable("Photo");
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Service", b =>
@@ -800,11 +796,9 @@ namespace MarcAI.Infrastructure.Migrations
                 {
                     b.HasOne("MarcAI.Domain.Models.Entities.Company", null)
                         .WithMany("Photos")
-                        .HasForeignKey("CompanyId");
-
-                    b.HasOne("MarcAI.Domain.Models.Entities.Employee", null)
-                        .WithOne("Photo")
-                        .HasForeignKey("MarcAI.Domain.Models.Entities.Photo", "EmployeeId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Service", b =>
@@ -902,8 +896,6 @@ namespace MarcAI.Infrastructure.Migrations
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Employee", b =>
                 {
                     b.Navigation("OfferedServices");
-
-                    b.Navigation("Photo");
 
                     b.Navigation("Schedules");
                 });
