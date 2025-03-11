@@ -6,6 +6,8 @@ using MarcAI.Application.Dtos.Filters;
 
 namespace MarcAI.API.Controllers;
 
+[ApiController]
+[Route("api/[controller]")]
 public class EmployeeController : Controller
 {
     private readonly IEmployeeService _employeeService;
@@ -33,6 +35,25 @@ public class EmployeeController : Controller
             return StatusCode(500, ex.Message);
         }
     }
+
+    [HttpGet("email/{email}")]
+    public async Task<IActionResult> GetByUserId(string email)
+    {
+        try
+        {
+            var employee = await _employeeService.GetByEmail(email);
+            return Ok(employee);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
 
     [HttpGet]
     [SwaggerOperation(Summary = "Obtém uma lista de funcionários")]

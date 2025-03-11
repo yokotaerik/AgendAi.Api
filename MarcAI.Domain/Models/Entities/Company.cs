@@ -9,8 +9,9 @@ public class Company : BaseEntity
     public string FantasyName { get; private set; }
     public Address Address { get; private set; }
     public Cnpj Cnpj { get; private set; }
-    public  ICollection<Employee> Employees { get; private set; } = new List<Employee>();
-    public ICollection<Service> Services { get; private set; } = new List<Service>();
+    public  ICollection<Employee> Employees { get; private set; } = [];
+    public ICollection<Service> Services { get; private set; } = [];
+    public ICollection<Photo> Photos { get; private set; } = [];
 
 #pragma warning disable CS8618
     private Company() { } // Supressão do aviso de inicialização
@@ -46,4 +47,20 @@ public class Company : BaseEntity
     {
         FantasyName = fantasyName;
     }
+
+    public void AddEmployee(Employee employee)
+    {
+        Employees.Add(employee);
+    }
+
+    public void RemovePhoto(Photo photo)
+    {
+        Photos.Remove(photo);
+    }
+
+    public void AddPhoto(Photo photo)
+    {
+        Photos.Add(photo);
+    }
+
 }

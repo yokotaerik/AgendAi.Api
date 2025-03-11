@@ -67,10 +67,25 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
                 cpf.Property(c => c.Value).HasColumnName("Cpf");
             });
 
+        modelBuilder.Entity<Employee>()
+        .HasOne(e => e.User)
+        .WithOne()
+        .HasForeignKey<Employee>(e => e.UserId);
+
         modelBuilder.Entity<AttendenceService>()
             .HasKey(x => new { x.AttendenceId, x.ServiceId });
 
-  
 
+        modelBuilder.Entity<User>()
+        .HasOne(u => u.Employee)
+        .WithOne(e => e.User)
+        .HasForeignKey<Employee>(e => e.UserId)
+        .IsRequired(false); // Indica que o relacionamento é opcional
+
+        modelBuilder.Entity<User>()
+        .HasOne(u => u.Customer)
+        .WithOne(e => e.User)
+        .HasForeignKey<Customer>(e => e.UserId)
+        .IsRequired(false); // Indica que o relacionamento é opcional
     }
 }

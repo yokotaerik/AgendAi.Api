@@ -201,14 +201,6 @@ namespace MarcAI.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -216,6 +208,9 @@ namespace MarcAI.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("customers");
                 });
@@ -238,16 +233,8 @@ namespace MarcAI.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<bool>("Owner")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -258,6 +245,9 @@ namespace MarcAI.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("employees");
                 });
@@ -301,6 +291,8 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("services");
@@ -312,8 +304,14 @@ namespace MarcAI.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -322,17 +320,33 @@ namespace MarcAI.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("HashedPassword")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid?>("EmployeeId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
 
                     b.ToTable("users");
                 });
@@ -381,6 +395,9 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
@@ -665,6 +682,10 @@ namespace MarcAI.Infrastructure.Migrations
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Customer", b =>
                 {
+                    b.HasOne("MarcAI.Domain.Models.Entities.User", "User")
+                        .WithOne("Customer")
+                        .HasForeignKey("MarcAI.Domain.Models.Entities.Customer", "UserId");
+
                     b.OwnsOne("MarcAI.Domain.Models.ValueObjects.Cpf", "Cpf", b1 =>
                         {
                             b1.Property<Guid>("CustomerId")
@@ -685,6 +706,8 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.Navigation("Cpf")
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Employee", b =>
@@ -694,6 +717,10 @@ namespace MarcAI.Infrastructure.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("MarcAI.Domain.Models.Entities.User", "User")
+                        .WithOne("Employee")
+                        .HasForeignKey("MarcAI.Domain.Models.Entities.Employee", "UserId");
 
                     b.OwnsOne("MarcAI.Domain.Models.ValueObjects.Cpf", "Cpf", b1 =>
                         {
@@ -717,13 +744,30 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.Navigation("Cpf")
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Service", b =>
                 {
+                    b.HasOne("MarcAI.Domain.Models.Entities.Company", null)
+                        .WithMany("Services")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MarcAI.Domain.Models.Entities.Employee", null)
                         .WithMany("OfferedServices")
                         .HasForeignKey("EmployeeId");
+                });
+
+            modelBuilder.Entity("MarcAI.Domain.Models.Entities.User", b =>
+                {
+                    b.HasOne("MarcAI.Domain.Models.Entities.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId");
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -790,6 +834,8 @@ namespace MarcAI.Infrastructure.Migrations
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Company", b =>
                 {
                     b.Navigation("Employees");
+
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Employee", b =>
@@ -797,6 +843,13 @@ namespace MarcAI.Infrastructure.Migrations
                     b.Navigation("OfferedServices");
 
                     b.Navigation("Schedules");
+                });
+
+            modelBuilder.Entity("MarcAI.Domain.Models.Entities.User", b =>
+                {
+                    b.Navigation("Customer");
+
+                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

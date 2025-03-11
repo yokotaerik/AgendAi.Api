@@ -9,13 +9,15 @@ namespace MarcAI.Application.Services;
 
 internal class CompanyService : ICompanyService
 {
+    private readonly IEmployeeService _employeeService;
     private readonly ICompanyRepository _companyRepository;
     private readonly IMapper _mapper;
 
-    public CompanyService(ICompanyRepository companyRepository, IMapper mapper)
+    public CompanyService(ICompanyRepository companyRepository, IMapper mapper, IEmployeeService employeeService)
     {
         _companyRepository = companyRepository;
         _mapper = mapper;
+        _employeeService = employeeService;
     }
 
     public async Task<IEnumerable<CompanyDto>> GetList() => _mapper.Map<IEnumerable<CompanyDto>>(await _companyRepository.GetList());
@@ -42,7 +44,11 @@ internal class CompanyService : ICompanyService
 
         await _companyRepository.Create(newComapany);
 
-        if(!await _companyRepository.Commit()) throw new InvalidOperationException("Failed to persist");
+        var employee = await _employeeService.Create(data.Owner, newComapany.Id);
+
+        newComapany.AddEmployee(employee);
+
+        if (!await _companyRepository.Commit()) throw new InvalidOperationException("Failed to persist");
 
         return _mapper.Map<CompanyDto>(newComapany);
     }

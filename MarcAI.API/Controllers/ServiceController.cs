@@ -1,8 +1,8 @@
 ﻿using MarcAI.Application.Dtos.Filters;
 using MarcAI.Application.Dtos.Services;
 using MarcAI.Application.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MarcAI.API.Controllers
 {
@@ -18,7 +18,9 @@ namespace MarcAI.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetList(ServiceFilterDto filter)
+        [SwaggerOperation(Summary = "Obtém uma lista de empresas")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Retorna os serviços empresas baseada no filtro", typeof(ServiceDto))]
+        public async Task<IActionResult> GetList([FromQuery] ServiceFilterDto filter)
         {
             try
             {

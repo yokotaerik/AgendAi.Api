@@ -1,6 +1,4 @@
-﻿using MarcAI.Application.Dtos.Companies;
-
-namespace MarcAI.Application.Dtos.Services;
+﻿namespace MarcAI.Application.Dtos.Services;
 
 public record UpdateServiceDto 
 {

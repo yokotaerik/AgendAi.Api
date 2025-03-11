@@ -1,29 +1,44 @@
-﻿using MarcAI.Domain.Interfaces.Repositories;
+﻿using MarcAI.Application.Interfaces;
+using MarcAI.Domain.Interfaces.Repositories;
 using MarcAI.Domain.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace MarcAI.Application.Services;
 
-internal class UserService
+internal class UserService(IUserRepository userRepository, IHttpContextAccessor httpContextAccessor, IEmployeeRepository employeeRepository) : IUserService
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public UserService(IUserRepository userRepository, IHttpContextAccessor httpContextAccessor)
-    {
-        _userRepository = userRepository;
-        _httpContextAccessor = httpContextAccessor;
-    }
-
     public async Task<User> GetCurrentUserAsync()
     {
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userId = httpContextAccessor.HttpContext?.User.FindFirst("Id")?.Value;
 
         if (string.IsNullOrEmpty(userId))
             throw new UnauthorizedAccessException("Usuário não autenticado.");
 
         // Usa o repositório para obter o usuário
-        return await _userRepository.GetById(new Guid(userId));
+        var user = await userRepository.GetById(new Guid(userId));
+
+        return user ?? throw new UnauthorizedAccessException("Usuário não encontrado.");
+    }
+
+    public async Task<Employee> GetCurrentEmployeIncludeUser()
+    {
+        var userId = httpContextAccessor.HttpContext?.User.FindFirst("Id")?.Value;
+        if (string.IsNullOrEmpty(userId))
+            throw new UnauthorizedAccessException("Usuário não autenticado.");
+
+        var employee = await employeeRepository.GetByUserIdAsync(new Guid(userId));
+
+        return employee ?? throw new UnauthorizedAccessException("Usuário não é um funcionário.");
+    }
+
+    public Guid GetUserId()
+    {
+        var userId = httpContextAccessor.HttpContext?.User.FindFirst("Id")?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+            throw new UnauthorizedAccessException("Usuário não autenticado.");
+
+        return new Guid(userId);
     }
 }

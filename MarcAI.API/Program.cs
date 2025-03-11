@@ -1,9 +1,9 @@
 using FluentValidation.AspNetCore;
+using MarcAI.API.Configuration;
 using MarcAI.Application.Configuration;
 using MarcAI.Application.Mapping;
 using MarcAI.Infrastructure.Configuration;
 using MarcAI.Infrastructure.Data.Context;
-using MarcAI.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +24,7 @@ builder.Services.AddFluentValidationAutoValidation(fv =>
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Primeiro o autenticao e apenas depois a autorizacao
-builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity(builder.Configuration);
 builder.Services.AddAuthorization();
 
 // Dependency injection 
@@ -34,11 +34,8 @@ builder.Services.AddApplicationServices();
 
 // Infra
 builder.Services.AddRepositories();
+builder.Services.AddServices();
 
-
-builder.Services
-        .AddIdentityApiEndpoints<ApplicationUser>()
-        .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddAutoMapper(typeof(StartupBase));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -55,9 +52,12 @@ builder.Services.AddCors(options =>
     });
 });
 
-var app = builder.Build();
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(5000);
+});
 
-app.MapIdentityApi<ApplicationUser>();
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -70,6 +70,9 @@ app.MapControllers();
 
 app.UseCors();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

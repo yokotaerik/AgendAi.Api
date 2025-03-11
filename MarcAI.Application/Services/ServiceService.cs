@@ -9,25 +9,31 @@ using MarcAI.Shared.Helpers;
 
 namespace MarcAI.Application.Services;
 
-internal class ServiceService(IServiceRepository serviceRepository, IMapper mapper) : IServiceService
+internal class ServiceService(IServiceRepository serviceRepository, IMapper mapper, IUserService userService, IEmployeeRepository employeeRepository) : IServiceService
 {
     private readonly IServiceRepository _serviceRepository = serviceRepository;
     private readonly IMapper _mapper = mapper;
+    private readonly IUserService _userService = userService;
 
-    public async Task<ServiceDto> Create(RegisterServiceDto service)
+    public async Task<ServiceDto> Create(RegisterServiceDto data)
     {
-        var newService = Service.Create(service.Name, service.Description, service.Duration ,service.Price, service.CompanyId);
+        Employee employee = await GetOwner();
+
+        var newService = Service.Create(data.Name, data.Description, data.Duration, data.Price, employee.CompanyId);
 
         await _serviceRepository.Create(newService);
 
-        if(!await _serviceRepository.Commit()) throw new Exception("Persistence Error");
+        if (!await _serviceRepository.Commit()) throw new Exception("Persistence Error");
 
-        return _mapper.Map<ServiceDto>(service);
+        return _mapper.Map<ServiceDto>(newService);
     }
+
 
     public async Task<bool> Delete(Guid id)
     {
-        var service =  await _serviceRepository.GetById(id) ?? throw new Exception("Service not found");
+        await GetOwner();
+
+        var service = await _serviceRepository.GetById(id) ?? throw new Exception("Service not found");
 
         service.Delete();
 
@@ -56,17 +62,26 @@ internal class ServiceService(IServiceRepository serviceRepository, IMapper mapp
 
     public Task<ServiceDto> GetById(Guid id) => _serviceRepository.GetById(id).ContinueWith(task => _mapper.Map<ServiceDto>(task.Result));
 
-    public async Task<ServiceDto> Update(UpdateServiceDto service)
+    public async Task<ServiceDto> Update(UpdateServiceDto data)
     {
-        var serviceDb = await _serviceRepository.GetById(service.Id!.Value) ?? throw new Exception("Service not found");
+        await GetOwner();
 
-        serviceDb.Update(service.Name, service.Description, service.Duration, service.Price);
+        var serviceDb = await _serviceRepository.GetById(data.Id!.Value) ?? throw new Exception("Service not found");
+
+        serviceDb.Update(data.Name, data.Description, data.Duration, data.Price);
         _serviceRepository.Update(serviceDb);
-        
+
         if (!await _serviceRepository.Commit()) throw new Exception("Persistence Error");
 
-        return _mapper.Map<ServiceDto>(service);
+        return _mapper.Map<ServiceDto>(data);
     }
 
-  
+    private async Task<Employee> GetOwner()
+    {
+        var employee = await _userService.GetCurrentEmployeIncludeUser();
+
+        if (employee.Owner == false)
+            throw new Exception("User is not an owner");
+        return employee;
+    }
 }

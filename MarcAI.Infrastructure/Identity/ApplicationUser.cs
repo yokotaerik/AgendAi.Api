@@ -1,17 +1,11 @@
-﻿using MarcAI.Domain.Models.Entities;
+﻿using MarcAI.Domain.Enums.User;
+using MarcAI.Domain.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace MarcAI.Infrastructure.Identity;
 public class ApplicationUser : IdentityUser<Guid>
 {
-    public User ToDomainUser()
-    {
-        return new User
-        (
-            Id,
-            Email!
-        );
-    }
+    public UserType Role { get; set; }
 
     public ApplicationUser()
     {
@@ -19,6 +13,6 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public static ApplicationUser CreateFromUser(User user)
     {
-        return new ApplicationUser { Id = user.Id, Email = user.Email , UserName = user.Email};
+        return new ApplicationUser { Id = user.Id, Email = user.Email , UserName = user.Email, Role = user.Role};
     } 
 }

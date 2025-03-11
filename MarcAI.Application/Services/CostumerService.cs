@@ -31,11 +31,11 @@ internal class CostumerService : ICustomerService
 
     public async Task<CostumerDto> Create(RegisterCostumerDto data)
     {
-        var newUserToCostumer = User.Create(data.Credentials.Email);
+        var newUserToCostumer = User.Create(data.Name!, data.Surname!, data.Credentials.Email, Domain.Enums.User.UserType.Customer);
 
         await _userRepository.Create(newUserToCostumer, data.Credentials.Password);
 
-        var newCostumer = Customer.Create(data.Name!, data.Surname!, data.Cpf!, newUserToCostumer.Id);
+        var newCostumer = Customer.Create( data.Cpf!, newUserToCostumer.Id);
 
         await _costumerRepository.Add(newCostumer);
 

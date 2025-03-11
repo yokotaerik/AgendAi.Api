@@ -1,4 +1,5 @@
-﻿using MarcAI.Domain.Interfaces.Repositories;
+﻿using MarcAI.Domain.Enums.User;
+using MarcAI.Domain.Interfaces.Repositories;
 using MarcAI.Domain.Models.Entities;
 using MarcAI.Infrastructure.Data.Context;
 using MarcAI.Infrastructure.Data.UoW;

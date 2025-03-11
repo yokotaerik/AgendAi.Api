@@ -11,6 +11,8 @@ public static class DepencyInjection
         services.AddScoped<ICustomerService, CostumerService>();
         services.AddScoped<ICompanyService, CompanyService>();
         services.AddScoped<IServiceService, ServiceService>();
+        services.AddScoped<IUserService, UserService>(); 
+        services.AddScoped<IEmployeeService, EmployeeService>();
 
         return services;
     }

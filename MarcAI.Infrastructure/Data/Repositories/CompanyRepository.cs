@@ -19,6 +19,7 @@ internal class CompanyRepository : UnitOfWork, ICompanyRepository
     public async Task Create(Company company) => await _dbSet.AddAsync(company); 
 
     public async Task<bool> ExistsAsync(Expression<Func<Company, bool>> predicate) => await _dbSet.AnyAsync(predicate);
+
     public async Task<IEnumerable<Company>> GetList() => await _dbSet.AsNoTracking().ToListAsync();
 
     public async Task<Company?> GetById(Guid id) => await _dbSet.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
@@ -26,4 +27,6 @@ internal class CompanyRepository : UnitOfWork, ICompanyRepository
     public async Task<Company?> GetByIdToUpdate(Guid id) => await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
 
     public void Update(Company company) =>  _dbSet.Update(company);
+
+    public Task<Company?> GetByUserId(Guid id) => _dbSet.Where(c => c.Employees.Any(e => e.UserId == id)).FirstOrDefaultAsync();
 }
