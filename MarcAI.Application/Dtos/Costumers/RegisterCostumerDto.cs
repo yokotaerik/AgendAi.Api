@@ -1,5 +1,4 @@
 ﻿using MarcAI.Application.Dtos.Auth;
-using MarcAI.Domain.Models.ValueObjects;
 
 namespace MarcAI.Application.Dtos.Costumers;
 

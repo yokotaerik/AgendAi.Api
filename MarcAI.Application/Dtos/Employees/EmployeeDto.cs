@@ -1,4 +1,5 @@
-﻿using MarcAI.Application.Dtos.Schedules;
+﻿using MarcAI.Application.Dtos.Companies;
+using MarcAI.Application.Dtos.Schedules;
 using MarcAI.Domain.Models.Aggregates.Schedules;
 using MarcAI.Domain.Models.Entities;
 using MarcAI.Domain.Models.ValueObjects;
@@ -13,6 +14,6 @@ public record EmployeeDto
     public Cpf? Cpf { get; init; }
     public bool Owner { get; init; }
     public Guid? UserId { get; init; }
-    public Company? Company { get; init; }
+    public CompanyDto? Company { get; init; }
     public IList<ScheduleDto>? Schedules { get; init; } = new List<ScheduleDto>();
 }

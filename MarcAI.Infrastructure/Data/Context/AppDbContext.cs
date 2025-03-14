@@ -45,6 +45,16 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
              });
 
         modelBuilder.Entity<Company>()
+             .OwnsMany(c => c.Contacts, contact =>
+             {
+                 contact.Property(c => c.Info).HasColumnName("Info");
+                 contact.Property(contact => contact.Type).HasColumnName("Type");
+             });
+
+        modelBuilder.Entity<Company>()
+            .HasMany(c => c.Photos);
+
+        modelBuilder.Entity<Company>()
             .OwnsOne(c => c.Address, address =>
             {
                 address.Property(a => a.Street).HasColumnName("Street");

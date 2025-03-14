@@ -28,6 +28,8 @@ public class MappingProfile : Profile
         CreateMap<Service, ServiceDto>().ReverseMap();
 
         //Employee
-        CreateMap<Employee, EmployeeDto>().ReverseMap();
+        CreateMap<Employee, EmployeeDto>()
+            .ForMember(dto => dto.Company, opt => opt.MapFrom(src => src.Company))
+            .ReverseMap();
     }
 }

@@ -33,7 +33,7 @@ namespace MarcAI.Infrastructure.Data.Repositories
 
         public async Task<Employee?> GetByEmailAsync(string email)
         {
-            return await _dbSet.FirstOrDefaultAsync(x => x.User.Email == email);
+            return await _dbSet.Include(e => e.Company).FirstOrDefaultAsync(x => x.User.Email == email);
         }
 
         public Task<Employee?> GetByIdAsync(Guid id)

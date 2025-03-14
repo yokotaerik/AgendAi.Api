@@ -74,7 +74,7 @@ internal class ServiceService(IServiceRepository serviceRepository, IMapper mapp
 
         if (!await _serviceRepository.Commit()) throw new Exception("Persistence Error");
 
-        return _mapper.Map<ServiceDto>(data);
+        return _mapper.Map<ServiceDto>(serviceDb);
     }
 
     private async Task<Employee> GetOwner()

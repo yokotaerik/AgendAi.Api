@@ -1,6 +1,5 @@
 ﻿using MarcAI.Domain.Enums.User;
 using MarcAI.Domain.Models.Common;
-using System.Xml.Linq;
 
 namespace MarcAI.Domain.Models.Entities;
 

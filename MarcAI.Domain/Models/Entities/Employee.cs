@@ -5,7 +5,7 @@ using MarcAI.Domain.Models.ValueObjects;
 namespace MarcAI.Domain.Models.Entities;
 public class Employee : BaseEntity
 {
-    public Cpf Cpf { get; private set; }
+    public Cpf? Cpf { get; private set; }
     public Guid? PhotoId { get; private set; }
     public Guid UserId { get; private set; }
     public Guid CompanyId { get; private set; }
@@ -22,7 +22,7 @@ public class Employee : BaseEntity
     private Employee() { } // Supressão do aviso de inicialização
 #pragma warning restore CS8618
 
-    private Employee( Cpf cpf, Guid userId, Guid companyId, bool owner) : base()
+    private Employee(Cpf? cpf, Guid userId, Guid companyId, bool owner) : base()
     {
         Cpf = cpf;
         UserId = userId;
@@ -30,9 +30,12 @@ public class Employee : BaseEntity
         Owner = owner;
     }
 
-    public static Employee Create(string cpf, Guid userId, Guid companyId, bool owner)
+    public static Employee Create(string? cpf, Guid userId, Guid companyId, bool owner)
     {
-        var cpfVo = Cpf.Create(cpf);
+        Cpf? cpfVo = null;
+
+        if (cpf != null)
+            cpfVo = Cpf.Create(cpf);
 
         return new Employee(cpfVo, userId, companyId, owner);
     }
