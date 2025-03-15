@@ -26,10 +26,16 @@ internal class MessageRepository : UnitOfWork, IMessageRepository
         var companyGuid = new Guid(companyId);
         var customerGuid = new Guid(customerId);
 
+        var userIdOfCompany = await _dbContext.Set<Company>()
+            .Where(c => c.Id == companyGuid)
+            .SelectMany(c => c.Employees)
+            .Where(e => e.Owner)
+            .Select(e => e.UserId)
+            .SingleOrDefaultAsync();
 
         return await _dbContext.Set<Message>()
-            .Where(m => (m.SenderId == companyGuid && m.ReceiverId == customerGuid) ||
-                       (m.SenderId == customerGuid && m.ReceiverId == companyGuid))
+            .Where(m => (m.SenderId == userIdOfCompany && m.ReceiverId == customerGuid) ||
+                       (m.SenderId == customerGuid && m.ReceiverId == userIdOfCompany))
             .OrderBy(m => m.CreatedAt)
             .ToListAsync();
     }

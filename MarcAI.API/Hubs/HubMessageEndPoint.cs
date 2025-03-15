@@ -1,6 +1,7 @@
 ﻿using MarcAI.Application.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MarcAI.API.Hubs;
 
@@ -81,5 +82,13 @@ public class ChatHub : Hub
             await Clients.User(senderId).SendAsync("ReceiveMessage", msgDto, CancellationToken.None);
             _logger.LogInformation("Tentativa de envio para remetente via User");
         }
+
+
+    }
+
+    public async Task GetChatHistory(string companyId, string userId)
+    {
+        var messages = await _messageService.GetMessagesBetweenUsersAsync(companyId, userId);
+        await Clients.Caller.SendAsync("ReceiveChatHistory", messages);
     }
 }

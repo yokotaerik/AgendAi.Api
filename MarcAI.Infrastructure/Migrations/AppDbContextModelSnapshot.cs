@@ -64,7 +64,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("attendances");
+                    b.ToTable("attendances", (string)null);
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Aggregates.Attendances.AttendenceService", b =>
@@ -87,7 +87,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("attendancesServices");
+                    b.ToTable("attendancesServices", (string)null);
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Aggregates.Schedules.AvailablePeriod", b =>
@@ -121,7 +121,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("availablePeriods");
+                    b.ToTable("availablePeriods", (string)null);
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Aggregates.Schedules.Schedule", b =>
@@ -152,7 +152,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("schedules");
+                    b.ToTable("schedules", (string)null);
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Company", b =>
@@ -183,7 +183,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("companies");
+                    b.ToTable("companies", (string)null);
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Customer", b =>
@@ -212,7 +212,7 @@ namespace MarcAI.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("customers");
+                    b.ToTable("customers", (string)null);
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Employee", b =>
@@ -252,7 +252,7 @@ namespace MarcAI.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("employees");
+                    b.ToTable("employees", (string)null);
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Message", b =>
@@ -291,7 +291,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("messages");
+                    b.ToTable("messages", (string)null);
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Photo", b =>
@@ -336,7 +336,7 @@ namespace MarcAI.Infrastructure.Migrations
                     b.HasIndex("EmployeeId")
                         .IsUnique();
 
-                    b.ToTable("photos");
+                    b.ToTable("photos", (string)null);
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Service", b =>
@@ -382,7 +382,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("services");
+                    b.ToTable("services", (string)null);
                 });
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.User", b =>
@@ -435,7 +435,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("users");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("MarcAI.Infrastructure.Identity.ApplicationUser", b =>
@@ -696,7 +696,7 @@ namespace MarcAI.Infrastructure.Migrations
 
             modelBuilder.Entity("MarcAI.Domain.Models.Entities.Company", b =>
                 {
-                    b.OwnsOne("MarcAI.Domain.Models.ValueObjects.Address", "Address", b1 =>
+                    b.OwnsOne("MarcAI.Domain.Models.Entities.Company.Address#MarcAI.Domain.Models.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("CompanyId")
                                 .HasColumnType("uuid");
@@ -736,13 +736,13 @@ namespace MarcAI.Infrastructure.Migrations
 
                             b1.HasKey("CompanyId");
 
-                            b1.ToTable("companies");
+                            b1.ToTable("companies", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CompanyId");
                         });
 
-                    b.OwnsOne("MarcAI.Domain.Models.ValueObjects.Cnpj", "Cnpj", b1 =>
+                    b.OwnsOne("MarcAI.Domain.Models.Entities.Company.Cnpj#MarcAI.Domain.Models.ValueObjects.Cnpj", "Cnpj", b1 =>
                         {
                             b1.Property<Guid>("CompanyId")
                                 .HasColumnType("uuid");
@@ -754,13 +754,13 @@ namespace MarcAI.Infrastructure.Migrations
 
                             b1.HasKey("CompanyId");
 
-                            b1.ToTable("companies");
+                            b1.ToTable("companies", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CompanyId");
                         });
 
-                    b.OwnsMany("MarcAI.Domain.Models.ValueObjects.ContactInfo", "Contacts", b1 =>
+                    b.OwnsMany("MarcAI.Domain.Models.Entities.Company.Contacts#MarcAI.Domain.Models.ValueObjects.ContactInfo", "Contacts", b1 =>
                         {
                             b1.Property<Guid>("CompanyId")
                                 .HasColumnType("uuid");
@@ -782,7 +782,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                             b1.HasKey("CompanyId", "Id");
 
-                            b1.ToTable("ContactInfo");
+                            b1.ToTable("ContactInfo", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CompanyId");
@@ -803,7 +803,7 @@ namespace MarcAI.Infrastructure.Migrations
                         .WithOne("Customer")
                         .HasForeignKey("MarcAI.Domain.Models.Entities.Customer", "UserId");
 
-                    b.OwnsOne("MarcAI.Domain.Models.ValueObjects.Cpf", "Cpf", b1 =>
+                    b.OwnsOne("MarcAI.Domain.Models.Entities.Customer.Cpf#MarcAI.Domain.Models.ValueObjects.Cpf", "Cpf", b1 =>
                         {
                             b1.Property<Guid>("CustomerId")
                                 .HasColumnType("uuid");
@@ -815,7 +815,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                             b1.HasKey("CustomerId");
 
-                            b1.ToTable("customers");
+                            b1.ToTable("customers", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CustomerId");
@@ -838,7 +838,7 @@ namespace MarcAI.Infrastructure.Migrations
                         .WithOne("Employee")
                         .HasForeignKey("MarcAI.Domain.Models.Entities.Employee", "UserId");
 
-                    b.OwnsOne("MarcAI.Domain.Models.ValueObjects.Cpf", "Cpf", b1 =>
+                    b.OwnsOne("MarcAI.Domain.Models.Entities.Employee.Cpf#MarcAI.Domain.Models.ValueObjects.Cpf", "Cpf", b1 =>
                         {
                             b1.Property<Guid>("EmployeeId")
                                 .HasColumnType("uuid");
@@ -850,7 +850,7 @@ namespace MarcAI.Infrastructure.Migrations
 
                             b1.HasKey("EmployeeId");
 
-                            b1.ToTable("employees");
+                            b1.ToTable("employees", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("EmployeeId");

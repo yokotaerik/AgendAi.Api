@@ -38,7 +38,7 @@ public class AuthController : Controller
         try
         {
             var user = await _userService.GetCurrentUserAsync();
-            return Ok(new { user.Name, user.Surname, user.Email, user.Role });
+            return Ok(new { user.Id, user.Name, user.Surname, user.Email, user.Role });
         }
         catch (Exception ex)
         {

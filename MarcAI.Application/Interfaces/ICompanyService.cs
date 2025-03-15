@@ -7,6 +7,7 @@ public interface ICompanyService
 {
     Task<IEnumerable<CompanyDto>> GetList();
     Task<CompleteCompanyDto?> GetById(Guid id);
+    Task<Guid?> GetOwnerUserId(Guid companyId);
     Task<CompanyDto> Create(RegisterCompanyDto data);
     Task<CompanyDto> Update(UpdateCompanyDto data);
     Task<bool> Delete(Guid id);

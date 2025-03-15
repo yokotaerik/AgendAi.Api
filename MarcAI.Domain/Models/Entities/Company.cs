@@ -8,7 +8,7 @@ public class Company : BaseEntity
     public string CorporateName { get; private set; }
     public string FantasyName { get; private set; }
     public Address Address { get; private set; }
-    public Cnpj Cnpj { get; private set; }
+    public Cnpj? Cnpj { get; private set; }
     public  ICollection<Employee> Employees { get; private set; } = [];
     public ICollection<Service> Services { get; private set; } = [];
     public ICollection<Photo> Photos { get; private set; } = [];
@@ -18,17 +18,16 @@ public class Company : BaseEntity
     private Company() { } // Supressão do aviso de inicialização
     #pragma warning restore CS8618
 
-    private Company(string corporateName, string fantasyName, Address address, Cnpj cnpj)
+    private Company(string corporateName, string fantasyName, Address address)
     {
         CorporateName = corporateName;
         FantasyName = fantasyName;
         Address = address;
-        Cnpj = cnpj;
     }
 
-    public static Company Create(string corporateName, string fantasyName, Address address, Cnpj cnpj)
+    public static Company Create(string corporateName, string fantasyName, Address address)
     {
-        return new Company(corporateName, fantasyName, address, cnpj);
+        return new Company(corporateName, fantasyName, address);
     }
 
 

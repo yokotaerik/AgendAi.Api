@@ -56,6 +56,25 @@ namespace MarcAI.API.Controllers
             }
         }
 
+
+        [HttpGet("ownerUserId/{id}")]
+        public async Task<IActionResult> GetOwnerUserId(Guid id)
+        {
+            try
+            {
+                var company = await _companyService.GetOwnerUserId(id);
+                return Ok(company);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost]
         [SwaggerOperation(Summary = "Cria uma nova empresa", Description = "Cria uma nova empresa com os dados fornecidos.")]
         [SwaggerResponse(StatusCodes.Status200OK, "Retorna a empresa criada.", typeof(CompanyDto))]

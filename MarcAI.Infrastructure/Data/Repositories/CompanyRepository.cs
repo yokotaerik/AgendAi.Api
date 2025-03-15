@@ -25,10 +25,22 @@ internal class CompanyRepository : UnitOfWork, ICompanyRepository
     {
         return _dbSet.AsNoTracking();
     }
+    public async Task<Guid?> GetOwnerUserId(Guid companyId)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Where(c => c.Id == companyId)
+            .SelectMany(c => c.Employees)
+            .Where(e => e.Owner)
+            .Select(e => e.UserId)
+            .SingleOrDefaultAsync();
+    }
 
     public async Task<Company?> GetByIdToUpdate(Guid id) => await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
 
     public void Update(Company company) => _dbSet.Update(company);
 
     public Task<Company?> GetByUserId(Guid id) => _dbSet.Where(c => c.Employees.Any(e => e.UserId == id)).FirstOrDefaultAsync();
+
+   
 }

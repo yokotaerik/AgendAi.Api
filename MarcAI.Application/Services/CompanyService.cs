@@ -47,12 +47,16 @@ internal class CompanyService : ICompanyService
         return companyDto;
     }
 
+    public async Task<Guid?> GetOwnerUserId(Guid companyId)
+    {
+        return await _companyRepository.GetOwnerUserId(companyId);
+    }
+
+
     public async Task<CompanyDto> Create(RegisterCompanyDto data)
     {
         if(await _companyRepository.ExistsAsync(c => c.CorporateName == data.CorporateName))
             throw new ArgumentException("Corporate name already exists.");
-
-        var validCnpj = Cnpj.Create(data.Cnpj!);
 
         var validAddress = Address.Create(data.Address!.Street,
                                     data.Address!.Number,
@@ -62,7 +66,7 @@ internal class CompanyService : ICompanyService
                                     data.Address.State,
                                     data.Address!.ZipCode);
 
-        var newComapany = Company.Create(data.CorporateName!, data.FantasyName!, validAddress, validCnpj);
+        var newComapany = Company.Create(data.CorporateName!, data.FantasyName!, validAddress);
 
         await _companyRepository.Create(newComapany);
 
@@ -123,6 +127,7 @@ internal class CompanyService : ICompanyService
         foreach (var phone in newPhones)
             company.AddContact(ContactInfo.CreatePhone(phone));
     }
+
 
     #endregion
 }
