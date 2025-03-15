@@ -1,9 +1,11 @@
 using FluentValidation.AspNetCore;
 using MarcAI.API.Configuration;
+using MarcAI.API.Hubs;
 using MarcAI.Application.Configuration;
 using MarcAI.Application.Mapping;
 using MarcAI.Infrastructure.Configuration;
 using MarcAI.Infrastructure.Data.Context;
+using MarcAI.Infrastructure.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +43,7 @@ builder.Services.AddAutoMapper(typeof(StartupBase));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
@@ -67,6 +70,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
+app.MapHub<ChatHub>("/chatHub");
 
 app.UseCors();
 

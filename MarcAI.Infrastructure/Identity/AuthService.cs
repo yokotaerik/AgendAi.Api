@@ -1,6 +1,7 @@
 ﻿using MarcAI.Domain.Interfaces.Services;
 using MarcAI.Domain.Models.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

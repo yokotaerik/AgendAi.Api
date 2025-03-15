@@ -5,7 +5,7 @@ namespace MarcAI.Domain.Models.Entities;
 
 public class Customer : BaseEntity
 {
-    public Cpf Cpf { get; private set; }
+    public Cpf? Cpf { get; private set; }
     public Guid UserId { get; private set; }
 
     //Ef Relational
@@ -15,15 +15,15 @@ public class Customer : BaseEntity
     private Customer() { } // Supressão do aviso de inicialização
 #pragma warning restore CS8618
 
-    private Customer(Cpf cpf, Guid userId)
+    private Customer(Cpf? cpf, Guid userId)
     {
         Cpf = cpf;
         UserId = userId;
     }
 
-    public static Customer Create(string cpf, Guid userId)
+    public static Customer Create(Guid userId)
     {
-        return new Customer(Cpf.Create(cpf), userId);
+        return new Customer(null, userId);
     }
 
 }

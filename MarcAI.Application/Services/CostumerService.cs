@@ -35,7 +35,7 @@ internal class CostumerService : ICustomerService
 
         await _userRepository.Create(newUserToCostumer, data.Credentials.Password);
 
-        var newCostumer = Customer.Create( data.Cpf!, newUserToCostumer.Id);
+        var newCostumer = Customer.Create(newUserToCostumer.Id);
 
         await _costumerRepository.Add(newCostumer);
 

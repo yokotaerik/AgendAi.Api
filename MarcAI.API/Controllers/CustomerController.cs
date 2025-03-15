@@ -42,7 +42,6 @@ public class CustomerController : Controller
     {
         try
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
             var customer = await _customerService.Create(data);
             return Ok(customer);
         }

@@ -25,6 +25,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<AvailablePeriod> availablePeriods { get; set; }
     public DbSet<Schedule> schedules { get; set; }
     public DbSet<Photo> photos { get; set; }
+    public DbSet<Message> messages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -101,5 +102,12 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
         .WithOne(e => e.User)
         .HasForeignKey<Customer>(e => e.UserId)
         .IsRequired(false); // Indica que o relacionamento é opcional
+
+        modelBuilder.Entity<Message>()
+            .HasIndex(e => e.Id);
+        modelBuilder.Entity<Message>()
+           .HasIndex(e => e.SenderId);
+        modelBuilder.Entity<Message>()
+           .HasIndex(e => e.ReceiverId);
     }
 }

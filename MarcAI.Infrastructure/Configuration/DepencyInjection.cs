@@ -2,6 +2,7 @@
 using MarcAI.Domain.Interfaces.Services;
 using MarcAI.Infrastructure.Data.Repositories;
 using MarcAI.Infrastructure.Identity;
+using MarcAI.Infrastructure.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MarcAI.Infrastructure.Configuration;
@@ -16,6 +17,7 @@ public static class DepencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         services.AddScoped<IPhotoRepository, PhotoRepository>();
+        services.AddScoped<IMessageRepository, MessageRepository>();
 
         return services;
     }
