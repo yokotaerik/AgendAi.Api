@@ -18,9 +18,5 @@ internal class RegisterCompanyDtoValidator : AbstractValidator<RegisterCompanyDt
         RuleFor(x => x.Address)
             .NotEmpty()
             .WithMessage("Address is required");
-
-        RuleFor(x => x.Cnpj)
-            .NotEmpty()
-            .WithMessage("Cnpj is required");
     }
 }

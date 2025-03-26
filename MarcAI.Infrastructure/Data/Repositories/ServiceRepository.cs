@@ -16,6 +16,8 @@ internal class ServiceRepository(AppDbContext context) : UnitOfWork(context), IS
 
     public async Task<Service?> GetById(Guid id) => await _dbSet.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
+    public async Task<IEnumerable<Service>> GetByIds(List<Guid> ids) => await _dbSet.Where(service => ids.Contains(service.Id)).ToListAsync();
+
     public async Task<Service?> GetByIdToUpdate(Guid id) => await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
 
    

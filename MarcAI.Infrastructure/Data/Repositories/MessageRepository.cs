@@ -44,4 +44,9 @@ internal class MessageRepository : UnitOfWork, IMessageRepository
     {
         await _dbContext.Set<Message>().AddAsync(message);
     }
+
+    public IQueryable<Message> GetQueryable()
+    {
+        return _dbContext.Set<Message>().AsQueryable();
+    }
 }

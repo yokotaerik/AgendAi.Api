@@ -32,12 +32,9 @@ public class Employee : BaseEntity
 
     public static Employee Create(string? cpf, Guid userId, Guid companyId, bool owner)
     {
-        Cpf? cpfVo = null;
+     
 
-        if (cpf != null)
-            cpfVo = Cpf.Create(cpf);
-
-        return new Employee(cpfVo, userId, companyId, owner);
+        return new Employee(null, userId, companyId, owner);
     }
 
     public void AddDefaultSchedule(DayOfWeek dayOfWeek, IList<AvailablePeriod> periods)
@@ -83,5 +80,10 @@ public class Employee : BaseEntity
     public void UpdatePhoto(Guid photoId)
     {
         PhotoId = photoId;
+    }
+
+    public void AddOfferedServices(List<Service> services)
+    {
+        OfferedServices = services;
     }
 }

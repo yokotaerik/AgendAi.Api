@@ -11,7 +11,6 @@ public record CompleteCompanyDto
     public string? CorporateName { get; init; }
     public string? FantasyName { get; init; }
     public Address? Address { get; init; }
-    public Cnpj? Cnpj { get; init; }
     public required IEnumerable<BasicInfoDto> Employees { get; init; }
     public required IEnumerable<ServiceDto> Services { get; init; }
     public List<string> ImageUrls { get; init; } = [];

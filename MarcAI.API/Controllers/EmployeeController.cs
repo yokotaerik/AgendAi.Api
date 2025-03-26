@@ -80,8 +80,8 @@ public class EmployeeController : Controller
     {
         try
         {
-            var employee = await _employeeService.Create(data);
-            return CreatedAtAction(nameof(GetById), new { id = employee.Id }, employee);
+            await _employeeService.Create(data);
+            return Ok();
         }
         catch (ArgumentException ex)
         {
@@ -93,7 +93,41 @@ public class EmployeeController : Controller
         }
     }
 
+    [HttpPut]
+    [SwaggerOperation(Summary = "Atualiza um funcionário")]
+    public async Task<IActionResult> Update([FromBody] UpdateEmployeeDto data)
+    {
+        try
+        {
+            await _employeeService.Update(data);
+            return Ok();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 
-
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        try
+        {
+            await _employeeService.Delete(id);
+            return Ok();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 
 }

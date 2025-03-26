@@ -3,6 +3,7 @@ using MarcAI.Application.Dtos.Common.User;
 using MarcAI.Application.Dtos.Companies;
 using MarcAI.Application.Dtos.Services;
 using MarcAI.Application.Interfaces;
+using MarcAI.Domain.Interfaces;
 using MarcAI.Domain.Interfaces.Repositories;
 using MarcAI.Domain.Models.Entities;
 using MarcAI.Domain.Models.ValueObjects;
@@ -15,12 +16,14 @@ internal class CompanyService : ICompanyService
     private readonly IEmployeeService _employeeService;
     private readonly ICompanyRepository _companyRepository;
     private readonly IMapper _mapper;
+    private readonly IUserManager _userManager;
 
-    public CompanyService(ICompanyRepository companyRepository, IMapper mapper, IEmployeeService employeeService)
+    public CompanyService(ICompanyRepository companyRepository, IMapper mapper, IEmployeeService employeeService, IUserManager userManager)
     {
         _companyRepository = companyRepository;
         _mapper = mapper;
         _employeeService = employeeService;
+        _userManager = userManager;
     }
 
     public async Task<IEnumerable<CompanyDto>> GetList() => _mapper.Map<IEnumerable<CompanyDto>>(await _companyRepository.GetList());
@@ -37,7 +40,6 @@ internal class CompanyService : ICompanyService
               CorporateName = c.CorporateName,
               FantasyName = c.FantasyName,
               Address = c.Address,
-              Cnpj = c.Cnpj,
               ImageUrls = c.Photos.Select(p => p.WebUrl).ToList(),
               Employees = c.Employees.Select(e => new BasicInfoDto(e.Id, e.Photo != null ? e.Photo.WebUrl : "", e.User.Name + " " + e.User.Surname)).ToList(),
               Services = c.Services.Select(s => _mapper.Map<ServiceDto>(s)).ToList()
@@ -74,7 +76,7 @@ internal class CompanyService : ICompanyService
 
         newComapany.AddEmployee(employee);
 
-        if (!await _companyRepository.Commit()) throw new InvalidOperationException("Failed to persist");
+        await _userManager.CreateUserAsync(employee.User, data.Owner.Password);
 
         return _mapper.Map<CompanyDto>(newComapany);
     }
@@ -84,9 +86,17 @@ internal class CompanyService : ICompanyService
         var company = await _companyRepository.GetByIdToUpdate(data.Id!.Value) 
             ?? throw new ArgumentException("Company not found.");
 
-        company.Update(data.FantasyName, data.Address);
+        var addressDto = data.Address;
 
-        HandlePhoneData(company, data.Phones);
+        var address = Address.Create(addressDto.Street,
+                                     addressDto.Number,
+                                     addressDto.Complement,
+                                     addressDto.Neighborhood,
+                                     addressDto.City,
+                                     addressDto.State,
+                                     addressDto.ZipCode);
+
+        company.Update(data.FantasyName, address);
 
          _companyRepository.Update(company);
 

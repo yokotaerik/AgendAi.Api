@@ -1,7 +1,5 @@
 ﻿using MarcAI.Application.Interfaces;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
-using System.Security.Cryptography.X509Certificates;
 
 namespace MarcAI.API.Hubs;
 

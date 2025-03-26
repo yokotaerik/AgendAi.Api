@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using MarcAI.Application.Dtos.Common.User;
 using MarcAI.Application.Dtos.Employees;
 using MarcAI.Application.Dtos.Filters;
 using MarcAI.Application.Interfaces;
 using MarcAI.Domain.Enums.User;
 using MarcAI.Domain.Interfaces.Repositories;
 using MarcAI.Domain.Models.Entities;
+using MarcAI.Domain.Models.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace MarcAI.Application.Services;
 
@@ -14,20 +17,27 @@ internal class EmployeeService : IEmployeeService
     private readonly IUserService _userService;
     private readonly IUserRepository _userRepository;
     private readonly IEmployeeRepository _employeeRepository;
+    private readonly IServiceRepository _serviceRepositoy;
     private readonly IMapper _mapper;
 
-    public EmployeeService(ICompanyRepository companyRepository, IEmployeeRepository employeeRepository, IUserRepository userRepository, IUserService userService, IMapper mapper)
+    public EmployeeService(ICompanyRepository companyRepository,
+                           IEmployeeRepository employeeRepository,
+                           IUserRepository userRepository,
+                           IUserService userService,
+                           IMapper mapper,
+                           IServiceRepository serviceRepositoy)
     {
         _companyRepository = companyRepository;
         _employeeRepository = employeeRepository;
         _userRepository = userRepository;
         _userService = userService;
         _mapper = mapper;
+        _serviceRepositoy = serviceRepositoy;
     }
 
-    public Task<EmployeeDto> GetById(Guid id)
+    public async Task<EmployeeDto> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        return _mapper.Map<EmployeeDto>(await _employeeRepository.GetByIdAsync(id));
     }
 
     public async Task<EmployeeDto> GetByUserId(Guid id)
@@ -40,12 +50,19 @@ internal class EmployeeService : IEmployeeService
         return _mapper.Map<EmployeeDto>(await _employeeRepository.GetByEmailAsync(email));
     }
 
-    public Task<IEnumerable<Employee>> GetList(EmployeeFilterDto filter)
+    public async Task<IEnumerable<BasicInfoDto>> GetList(EmployeeFilterDto filter)
     {
-        throw new NotImplementedException();
+        var query = _employeeRepository.GetQueryable();
+
+        if (filter.CompanyId != null)
+            query = query.Where(e => e.CompanyId == filter.CompanyId);
+
+        return await query.Select(
+            e => new BasicInfoDto(e.Id,e.Photo != null ? e.Photo!.WebUrl : "", e.User.Name + " " + e.User.Surname))
+            .ToListAsync();
     }
 
-    public async Task<Employee> Create(RegisterEmployeeDto data)
+    public async Task Create(RegisterEmployeeDto data)
     {
         var userId = _userService.GetUserId();
 
@@ -56,9 +73,13 @@ internal class EmployeeService : IEmployeeService
 
         await _userRepository.Create(newUserToEmployee, data.Password);
 
-        var newEmployee = Employee.Create(data.Cpf, newUserToEmployee.Id, company.Id, false);
+        var newEmployee = Employee.Create("", newUserToEmployee.Id, company.Id, false);
+    
+        await _employeeRepository.AddAsync(newEmployee);
 
-        return await _employeeRepository.AddAsync(newEmployee);
+        var success = await _employeeRepository.Commit();
+        if (!success)
+            throw new Exception("Commit failed.");
     }
 
     public async Task<Employee> Create(RegisterEmployeeDto data, Guid companyId)
@@ -67,7 +88,7 @@ internal class EmployeeService : IEmployeeService
 
         await _userRepository.Create(newUserToEmployee, data.Password);
 
-        var newEmployee = Employee.Create(data.Cpf, newUserToEmployee.Id, companyId, true);
+        var newEmployee = Employee.Create("", newUserToEmployee.Id, companyId, true);
 
         return await _employeeRepository.AddAsync(newEmployee);
     }
@@ -77,11 +98,41 @@ internal class EmployeeService : IEmployeeService
         var employee = await _employeeRepository.GetByIdAsync(data.Id) ??
             throw new ArgumentException("Employee not found.");
 
-        return await _employeeRepository.UpdateAsync(employee);
+        var user = employee.User;
+
+        if (String.IsNullOrEmpty(data.Email))
+        {
+            throw new ArgumentException("Email is required.");
+        }
+
+        user.Update(data.Name ?? "", data.Surname ?? "", data.Email);
+
+        await _userRepository.Update(user);
+
+        var services = await _serviceRepositoy.GetListByIds(data.ServicesIds);
+
+        employee.AddOfferedServices(services.ToList());
+
+        await _employeeRepository.UpdateAsync(employee);
+
+        var success = await _employeeRepository.Commit();
+        if (!success)
+            throw new Exception("Commit failed.");
+
+        return employee;
     }
 
-    public Task<Employee> Delete(Guid id)
+    public async Task Delete(Guid id)
     {
-        throw new NotImplementedException();
+        var employee = await _employeeRepository.GetByIdAsync(id) ??
+            throw new ArgumentException("Employee not found.");
+
+        employee.Delete();
+
+        await _employeeRepository.UpdateAsync(employee);
+
+        var success = await _employeeRepository.Commit();
+        if (!success)
+            throw new Exception("Commit failed.");
     }
 }

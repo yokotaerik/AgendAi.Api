@@ -22,17 +22,27 @@ internal class UserRepository : UnitOfWork, IUserRepository
 
     public async Task<User> Create(User user, string password)
     {
-        var identityUser = ApplicationUser.CreateFromUser(user);
+        await _dbSet.AddAsync(user);
 
-        var sucess = await _userManager.CreateAsync(identityUser, password);
+        return user;
+    }
 
-        if (!sucess.Succeeded)
+    public async Task<User> Update(User user)
+    {
+        var identityUser = await _userManager.FindByEmailAsync(user.Email) ?? throw new Exception("User not found");
+        
+        identityUser.Update(user);
+
+        try
         {
-            var errors = string.Join(", ", sucess.Errors.Select(e => e.Description));
-            throw new Exception($"User creation failed: {errors}");
+        await _userManager.UpdateAsync(identityUser);
+
+        } catch(Exception ex)
+        {
+
         }
 
-        await _dbSet.AddAsync(user);
+        _dbSet.Update(user);
 
         return user;
     }
@@ -40,5 +50,15 @@ internal class UserRepository : UnitOfWork, IUserRepository
     public Task<User?> GetById(Guid id)
     {
         return _dbSet.FirstOrDefaultAsync(u => u.Id == id);
+    }
+
+    public Task<string?> GetSenderName(Guid id)
+    {
+        return _dbSet
+        .Where(u => u.Id == id)
+        .Select(u => u.Role == UserType.Employee
+            ? (u.Employee!.Owner ? u.Employee.Company.FantasyName : u.Name + " " + u.Surname)
+            : u.Name + " " + u.Surname)
+        .FirstOrDefaultAsync();
     }
 }

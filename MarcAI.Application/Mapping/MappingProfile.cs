@@ -29,7 +29,12 @@ public class MappingProfile : Profile
 
         //Employee
         CreateMap<Employee, EmployeeDto>()
+            .ForMember(dto => dto.ImageUrl, opt => opt.MapFrom(src => src.Photo != null ? src.Photo.WebUrl : ""))
+            .ForMember(dto => dto.Name, opt => opt.MapFrom(src => src.User.Name))
+            .ForMember(dto => dto.Surname, opt => opt.MapFrom(src => src.User.Surname))
+            .ForMember(dto => dto.Email, opt => opt.MapFrom(src => src.User.Email))
             .ForMember(dto => dto.Company, opt => opt.MapFrom(src => src.Company))
+            .ForMember(dto => dto.Services, opt => opt.MapFrom(src => src.OfferedServices))
             .ReverseMap();
     }
 }

@@ -49,10 +49,10 @@ internal class ServiceService(IServiceRepository serviceRepository, IMapper mapp
     {
         var predicate = PredicateBuilder.True<Service>();
 
+        predicate = predicate.And(x => x.CompanyId == filter.CompanyId);
+
         if (!string.IsNullOrEmpty(filter.Keyword))
-        {
             predicate = predicate.And(x => x.Name.Contains(filter.Keyword));
-        }
 
         var services = await _serviceRepository.GetList(predicate, filter.Page, filter.PageSize);
 

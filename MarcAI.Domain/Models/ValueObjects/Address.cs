@@ -23,7 +23,7 @@ public class Address
         if (string.IsNullOrWhiteSpace(number)) throw new ArgumentException("Number is required.", nameof(number));
         if (string.IsNullOrWhiteSpace(city)) throw new ArgumentException("City is required.", nameof(city));
         if (string.IsNullOrWhiteSpace(state)) throw new ArgumentException("State is required.", nameof(state));
-        if (string.IsNullOrWhiteSpace(zipCode) || !IsValidZipCode(zipCode)) throw new ArgumentException("Invalid ZIP code.", nameof(zipCode));
+        if (string.IsNullOrWhiteSpace(zipCode)) throw new ArgumentException("Invalid ZIP code.", nameof(zipCode));
 
         Street = street;
         Number = number;
@@ -34,11 +34,6 @@ public class Address
         ZipCode = zipCode;
     }
 
-    private static bool IsValidZipCode(string zipCode)
-    {
-        return System.Text.RegularExpressions.Regex.IsMatch(zipCode, @"^\d{5}-\d{3}$");
-    }
-  
     public override string ToString()
     {
         return $"{Street}, {Number}{(string.IsNullOrWhiteSpace(Complement) ? "" : $" - {Complement}")}, {Neighborhood}, {City}, {State}, CEP: {ZipCode}";

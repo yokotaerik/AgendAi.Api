@@ -8,5 +8,4 @@ public record RegisterEmployeeDto
     public string Surname { get; init; } = default!;
     public string Email { get; init; } = default!;
     public string Password { get; init; } = default!;
-    public string Cpf { get; init; } = default!;
 }

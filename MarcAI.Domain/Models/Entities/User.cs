@@ -1,5 +1,6 @@
 ﻿using MarcAI.Domain.Enums.User;
 using MarcAI.Domain.Models.Common;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 
 namespace MarcAI.Domain.Models.Entities;
 
@@ -41,4 +42,11 @@ public class User : BaseEntity
 
     public static User Create(string name, string surname, string email, UserType role)
         => new(Guid.NewGuid(),name, surname ,email.ToLower(), role);
+
+    public void Update(string name, string surname, string email)
+    {
+        this.Name = name;
+        this.Surname = surname;
+        this.Email = email;
+    }
 }

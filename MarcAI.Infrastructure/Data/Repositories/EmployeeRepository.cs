@@ -38,12 +38,22 @@ namespace MarcAI.Infrastructure.Data.Repositories
 
         public Task<Employee?> GetByIdAsync(Guid id)
         {
-            return _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+            return _dbSet.Include(e => e.User)
+                         .Include(e => e.Photo)
+                         .Include(e => e.OfferedServices)
+                         .Include(e => e.Schedules)
+                         .Include(e => e.Company)
+                         .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public Task<Employee?> GetByUserIdAsync(Guid userId)
         {
             return _dbSet.FirstOrDefaultAsync(x => x.UserId == userId);
+        }
+
+        public IQueryable<Employee> GetQueryable()
+        {
+            return _dbSet.AsQueryable();
         }
 
         public Task<Employee> UpdateAsync(Employee employee)

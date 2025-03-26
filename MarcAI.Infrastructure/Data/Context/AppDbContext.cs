@@ -1,11 +1,13 @@
 ﻿using MarcAI.Domain.Models.Aggregates.Attendances;
 using MarcAI.Domain.Models.Aggregates.Schedules;
+using MarcAI.Domain.Models.Common;
 using MarcAI.Domain.Models.Entities;
 using MarcAI.Domain.Models.ValueObjects;
 using MarcAI.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace MarcAI.Infrastructure.Data.Context;
 
@@ -30,6 +32,22 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                var parameter = Expression.Parameter(entityType.ClrType, "e");
+                var filter = Expression.Lambda(
+                    Expression.Equal(
+                        Expression.Property(parameter, nameof(BaseEntity.IsDeleted)),
+                        Expression.Constant(false)
+                    ),
+                    parameter
+                );
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);
+            }
+        }
 
         // Configurações adicionais de mapeamento podem ser feitas aqui
         modelBuilder.Entity<ApplicationUser>(entity =>

@@ -14,6 +14,13 @@ namespace MarcAI.API.Controllers
             _messageService = messageService;
         }
 
+        [HttpGet("chat")]
+        public async Task<IActionResult> GetChat()
+        {
+            var messages = await _messageService.GetChats();
+            return Ok(messages);
+        }
+
         [HttpGet("conversation/{user1Id}/{user2Id}")]
         public async Task<ActionResult<IEnumerable<MessageDto>>> GetConversation(string user1Id, string user2Id)
         {
