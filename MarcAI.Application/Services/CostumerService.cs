@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MarcAI.Application.Dtos.Costumers;
 using MarcAI.Application.Interfaces;
+using MarcAI.Domain.Interfaces;
 using MarcAI.Domain.Interfaces.Repositories;
 using MarcAI.Domain.Models.Entities;
 
@@ -11,12 +12,14 @@ internal class CostumerService : ICustomerService
     private readonly ICostumerRepository _costumerRepository;
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
+    private readonly IUserManager _userManager;
 
-    public CostumerService(ICostumerRepository costumerRepository, IMapper mapper, IUserRepository userRepository)
+    public CostumerService(ICostumerRepository costumerRepository, IMapper mapper, IUserRepository userRepository, IUserManager userManager)
     {
         _costumerRepository = costumerRepository;
         _mapper = mapper;
         _userRepository = userRepository;
+        _userManager = userManager;
     }
 
     public Task<CostumerDto> GetById(Guid id)
@@ -39,7 +42,7 @@ internal class CostumerService : ICustomerService
 
         await _costumerRepository.Add(newCostumer);
 
-        if (!await _costumerRepository.Commit()) throw new Exception("Persistence error");
+        await _userManager.CreateUserAsync(newUserToCostumer, data.Credentials.Password);
 
         return _mapper.Map<CostumerDto>(newCostumer);
     }

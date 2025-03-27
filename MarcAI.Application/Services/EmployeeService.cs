@@ -4,6 +4,7 @@ using MarcAI.Application.Dtos.Employees;
 using MarcAI.Application.Dtos.Filters;
 using MarcAI.Application.Interfaces;
 using MarcAI.Domain.Enums.User;
+using MarcAI.Domain.Interfaces;
 using MarcAI.Domain.Interfaces.Repositories;
 using MarcAI.Domain.Models.Entities;
 using MarcAI.Domain.Models.ValueObjects;
@@ -19,13 +20,14 @@ internal class EmployeeService : IEmployeeService
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IServiceRepository _serviceRepositoy;
     private readonly IMapper _mapper;
-
+    private readonly IUserManager _userManager;
     public EmployeeService(ICompanyRepository companyRepository,
                            IEmployeeRepository employeeRepository,
                            IUserRepository userRepository,
                            IUserService userService,
                            IMapper mapper,
-                           IServiceRepository serviceRepositoy)
+                           IServiceRepository serviceRepositoy,
+                           IUserManager userManager)
     {
         _companyRepository = companyRepository;
         _employeeRepository = employeeRepository;
@@ -33,6 +35,7 @@ internal class EmployeeService : IEmployeeService
         _userService = userService;
         _mapper = mapper;
         _serviceRepositoy = serviceRepositoy;
+        _userManager = userManager;
     }
 
     public async Task<EmployeeDto> GetById(Guid id)
@@ -77,9 +80,7 @@ internal class EmployeeService : IEmployeeService
     
         await _employeeRepository.AddAsync(newEmployee);
 
-        var success = await _employeeRepository.Commit();
-        if (!success)
-            throw new Exception("Commit failed.");
+        await _userManager.CreateUserAsync(newUserToEmployee, data.Password);
     }
 
     public async Task<Employee> Create(RegisterEmployeeDto data, Guid companyId)
@@ -90,7 +91,9 @@ internal class EmployeeService : IEmployeeService
 
         var newEmployee = Employee.Create("", newUserToEmployee.Id, companyId, true);
 
-        return await _employeeRepository.AddAsync(newEmployee);
+        var employee = await _employeeRepository.AddAsync(newEmployee);
+
+        return employee;
     }
 
     public async Task<Employee> Update(UpdateEmployeeDto data)

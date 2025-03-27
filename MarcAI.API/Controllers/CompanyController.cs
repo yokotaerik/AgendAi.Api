@@ -83,8 +83,8 @@ namespace MarcAI.API.Controllers
         {
             try
             {
-                var company = await _companyService.Create(data);
-                return Ok(company);
+                await _companyService.Create(data);
+                return Ok();
             }
             catch (ArgumentException ex)
             {
@@ -104,8 +104,8 @@ namespace MarcAI.API.Controllers
         {
             try
             {
-                var company = await _companyService.Update(data);
-                return Ok(company);
+                await _companyService.Update(data);
+                return Ok();
             }
             catch (ArgumentException ex)
             {

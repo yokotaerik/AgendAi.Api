@@ -55,7 +55,7 @@ internal class CompanyService : ICompanyService
     }
 
 
-    public async Task<CompanyDto> Create(RegisterCompanyDto data)
+    public async Task Create(RegisterCompanyDto data)
     {
         if(await _companyRepository.ExistsAsync(c => c.CorporateName == data.CorporateName))
             throw new ArgumentException("Corporate name already exists.");
@@ -77,11 +77,9 @@ internal class CompanyService : ICompanyService
         newComapany.AddEmployee(employee);
 
         await _userManager.CreateUserAsync(employee.User, data.Owner.Password);
-
-        return _mapper.Map<CompanyDto>(newComapany);
     }
 
-    public async Task<CompanyDto> Update(UpdateCompanyDto data)
+    public async Task Update(UpdateCompanyDto data)
     {
         var company = await _companyRepository.GetByIdToUpdate(data.Id!.Value) 
             ?? throw new ArgumentException("Company not found.");
@@ -101,8 +99,6 @@ internal class CompanyService : ICompanyService
          _companyRepository.Update(company);
 
         if (!await _companyRepository.Commit()) throw new InvalidOperationException("Failed to persist");
-
-        return _mapper.Map<CompanyDto>(company);
     }
 
     public async Task<bool> Delete(Guid id)

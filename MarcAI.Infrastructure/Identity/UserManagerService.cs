@@ -18,14 +18,21 @@ internal class UserManagerService : IUserManager
     {
         var identityUser = ApplicationUser.CreateFromUser(user);
 
-        var sucess = await _userManager.CreateAsync(identityUser, password);
-
-        if (!sucess.Succeeded)
+        try
         {
-            var errors = string.Join(", ", sucess.Errors.Select(e => e.Description));
-            throw new Exception($"User creation failed: {errors}");
-        }
+            var sucess = await _userManager.CreateAsync(identityUser, password);
 
-        return true;
+            if (!sucess.Succeeded)
+            {
+                var errors = string.Join(", ", sucess.Errors.Select(e => e.Description));
+                throw new Exception($"User creation failed: {errors}");
+            }
+            return true;
+
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 }
